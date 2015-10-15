@@ -10,6 +10,7 @@ __pycache__/
 
 .idea
 .idea/*
+*.pyc
 
 # Distribution / packaging
 .Python
