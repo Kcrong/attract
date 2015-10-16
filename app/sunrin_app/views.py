@@ -2,9 +2,10 @@
 
 from flask import render_template, redirect, url_for, send_from_directory, request
 from login_manage import User, login_manager
-from .. import db, app
+from .. import app
 from . import sunrin_app_blueprint
 from flask_login import current_user, login_user, logout_user, login_required
+from db_manage import *
 
 
 @login_manager.user_loader
@@ -21,7 +22,7 @@ def index():
 @sunrin_app_blueprint.route('/login', methods=['GET', 'POST'])
 def login():
     if current_user.is_authenticated is not False:
-        return redirect(url_for('index'))
+        return redirect('/')
     if request.method == 'GET':
         return render_template('login.html')
     else:
@@ -31,10 +32,16 @@ def login():
         if db_user_check(userid, password):
             user = User(userid)
             login_user(user)
-            return redirect(url_for('home'))
+            return redirect('/protected')
 
         else:
             return 'Bad Login'
+
+
+@sunrin_app_blueprint.route('/protected')
+@login_required
+def protected():
+    return "Login User Only"
 
 
 @sunrin_app_blueprint.route('/logout')
