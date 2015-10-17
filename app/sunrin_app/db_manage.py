@@ -10,11 +10,11 @@ def db_user_check(get_userid, get_password):
         return True
 
 
-"""
-me data:
-    name : hangul
-    id : 12812984192842
-"""
+def db_user_add(get_userid, get_password):
+    u = Users(userid=get_userid, password=get_password)
+    db.session.add(u)
+    db.session.commit()
+    return True
 
 
 def db_add_fb_info(get_fb_info):
@@ -26,4 +26,3 @@ def db_add_fb_info(get_fb_info):
 
 def db_fb_user_check(get_fb_id):
     return Users.query.filter_by(fb_id=get_fb_id, active_yn=True).first()
-
