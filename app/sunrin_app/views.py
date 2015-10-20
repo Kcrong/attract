@@ -2,10 +2,9 @@
 
 from flask import render_template, redirect, url_for, send_from_directory, request, flash, session
 from login_manage import User, login_manager
-from .. import app
+from .. import app, db
 from . import sunrin_app_blueprint
 from flask_login import current_user, login_user, logout_user, login_required
-from db_manage import *
 
 from flask.ext.oauth import OAuth
 
@@ -48,8 +47,8 @@ def login():
     else:
         userid = request.form['id']
         password = request.form['password']
-
-        if db_user_check(userid, password):
+        u = User.query.filter_by(userid=userid, password=password, active_yn=True).first()
+        if u is not None:
             user = User(userid)
             login_user(user)
             session['username'] = userid
@@ -70,11 +69,16 @@ def facebook_authorized(resp):
     session['fb_access_token'] = (resp['access_token'], '')
 
     me = facebook.get('/me')
-    fb_id = me.data['id']
-    fb_name = me.data['name']
-    user = db_fb_user_check(fb_id)
+    data = me.data
+    fb_id = data['id']
+    fb_name = data['name']
+    user = User.query.filter_by(fb_id=fb_id, active_yn=True).first()
+
     if user is None:
-        db_add_fb_info(me)
+        u = User(fb_id=data['id'], name=data['name'])
+        db.session.add(u)
+        db.session.commit()
+        return True
 
     session['user_id'] = fb_id
     session['username'] = fb_name
