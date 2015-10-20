@@ -4,6 +4,7 @@
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
   <meta charset="UTF-8">
+  <script src="jquery.min.js"></script>
   <script src="http://cdn.jsdelivr.net/interact.js/1.2.4/interact.min.js"></script>
   <title>example</title>
 
@@ -48,9 +49,6 @@
   </style>
   <script>
     var movingTexts = {};
-    /* The dragging code for '.draggable' from the demo above
-     * applies to this demo as well so it doesn't have to be repeated. */
-    // enable draggables to be dropped into this
     interact('.draggable')
       .draggable({
         // enable inertial throwing
@@ -69,11 +67,11 @@
 
         // call this function on every dragmove event
         onmove: dragMoveListener,
-        // call this function on every dragend event
 
-      });
+    }); // end interact
 
     function dragMoveListener(event) {
+      console.log(1);
       var target = event.target,
         // keep the dragged position in the data-x/data-y attributes
         x = (parseFloat(target.getAttribute('data-x')) || 0) + event.dx,
@@ -95,32 +93,32 @@
     interact('#outer-dropzone').dropzone({
       // only accept elements matching this CSS selector
       //accept: '#yes-drop',
+
       // Require a 75% element overlap for a drop to be possible
       overlap: 0.75,
 
       // listen for drop related events:
-
       ondropactivate: function(event) {
-        // add active dropzone feedback
+        var target = event.relatedTarget;
         event.target.classList.add('drop-active');
+        target.dragIn = true;
+        console.log('ondropactivate');
       },
       ondragenter: function(event) {
 
         var draggableElement = event.relatedTarget,
-          dropzoneElement = event.target;
+        dropzoneElement = event.target;
 
-        // feedback the possibility of a drop
         dropzoneElement.classList.add('drop-target');
         draggableElement.classList.add('can-drop');
-        //draggableElement.textContent = 'Dragged in';
       },
       ondragleave: function(event) {
 
-        // remove the drop feedback style
         var text = event.relatedTarget.textContent
         event.target.classList.remove('drop-target');
         event.relatedTarget.classList.remove('can-drop');
-        for (var i in movingTexts) {
+        for (var i in movingTexts) 
+        {
           try {
             mText = movingTexts[i].body.innerHTML;
           } catch (ex) {
@@ -129,14 +127,12 @@
           }
           if (mText == text)
             movingTexts[i].dragIn = false;
-
-        }
-        //movingTexts.append(event.relatedTarget);
-        //event.relatedTarget.textContent = 'Dragged out';
+        } // movingTexts 의 내용이랑 target text내용이랑 비교해서 일치하면 drag leave 됬다고 판정.
       },
       ondrop: function(event) {
         var text = event.relatedTarget.textContent
-        for (var i in movingTexts) {
+        for (var i in movingTexts) 
+        {
           console.log(movingTexts[i]);
           try {
             mText = movingTexts[i].body.innerHTML;
@@ -150,7 +146,7 @@
             movingTexts[i].dragIn = true;
             break;
           }
-        }
+        } // // movingTexts 의 내용이랑 target text내용이랑 비교해서 일치하면 on drop 됬다고 판정.
       },
       ondropdeactivate: function(event) {
 
@@ -185,9 +181,7 @@
       return Math.random();
     }
 
-    //MovingText의 생성자 함수
-
-    var canvasWidth = window.innerWidth;
+    var canvasWidth = $(window).width();
     var canvasHeight = window.innerHeight;
     var collect = "";
 
@@ -203,7 +197,7 @@
       this.elmV = 255; // Value 
 
       this.dragIn = false
-        //문서 객체 생성
+
       this.body = document.createElement('p');
 
       this.body.style.fontSize = "35px";
@@ -241,21 +235,19 @@
       this.body.style.top = this.y + 'px';
     }
 
-
-
     window.onload = function() {
-      var texts = ["p1", "p11", "p2", "p3", "p4", "p5"];
-      //배열에 MovingText 객체 100개 생성
-      for (var i = 0; i < texts.length; i++) 
+      var texts = ["p1", "p11", "p2", "p3", "p4", "p5", "p6"];
+      //배열에 MovingText 객체 생성
+      for (var i in texts) 
       {
         movingTexts[i] = new MovingText(texts[i]);
+        
       }
         
       setInterval(function() {
-
         canvasWidth = window.innerWidth - 45;
         canvasHeight = window.innerHeight - 91;
-      }, 500);
+      }, 500); // end setInterval
 
       setInterval(function() {
         for (var i in movingTexts) 
@@ -265,8 +257,8 @@
             movingTexts[i].move();
           }
         }
-      }, 20);
-    }
+      }, 20); // end setInterval
+    } // end window.onload
   </script>
 </head>
 
