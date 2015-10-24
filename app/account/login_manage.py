@@ -1,4 +1,4 @@
-from . import sunrin_app_blueprint
+from app.sunrin_app import sunrin_app_blueprint
 from flask_login import LoginManager, UserMixin
 
 login_manager = LoginManager()
