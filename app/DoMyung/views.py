@@ -4,6 +4,7 @@ from . import domyung_bp
 
 from .. import db
 
+
 @domyung_bp.route('/add', methods=['GET', 'POST'])
 def add_promise(request):
     data = request.form
@@ -12,3 +13,6 @@ def add_promise(request):
     db.session.add(p)
     db.session.commit()
 
+@domyung_bp.route('/')
+def domyung_index():
+    return "domyung home!"

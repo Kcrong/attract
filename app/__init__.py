@@ -13,9 +13,11 @@ db = SQLAlchemy()
 def create_app():
     from sunrin_app import sunrin_app_blueprint
     from account import account_bp
+    from DoMyung import domyung_bp
 
     app.register_blueprint(sunrin_app_blueprint)
     app.register_blueprint(account_bp, url_prefix='/account')
+    app.register_blueprint(domyung_bp, url_prefix='/domyung')
     app.config.from_pyfile('../config.cfg')
     return app
 

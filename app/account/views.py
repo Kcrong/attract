@@ -1,4 +1,4 @@
-from flask import render_template, redirect, url_for,  request, flash, session
+from flask import render_template, redirect, url_for, request, flash, session
 from flask_login import current_user, login_user, logout_user, login_required
 from flask.ext.oauth import OAuth
 from models import Users
@@ -18,15 +18,24 @@ facebook = oauth.remote_app('facebook',
                             consumer_secret='2afc33a5d8ade7829ece293573b10c40',
                             request_token_params={'scope': 'email'}
                             )
+
+
+@account_bp.route('/')
+def account_index():
+    return "account_index"
+
+
 @account_bp.route('/me')
 @login_required
 def home():
     return "Hello %s" % session['username']
 
+
 @login_manager.user_loader
 def user_loader(email):
     user = User(email)
     return user
+
 
 @account_bp.route('/login', methods=['GET', 'POST'])
 def login():
