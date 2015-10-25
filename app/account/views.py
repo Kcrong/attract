@@ -20,11 +20,6 @@ facebook = oauth.remote_app('facebook',
                             )
 
 
-@account_bp.route('/')
-def account_index():
-    return "account_index"
-
-
 @account_bp.route('/me')
 @login_required
 def home():

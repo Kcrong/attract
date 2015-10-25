@@ -23,7 +23,6 @@ def create_app():
 
 app = create_app()
 db = SQLAlchemy(app)
-print dir(db)
 migrate = Migrate(app, db)
 manager = Manager(app)
 
