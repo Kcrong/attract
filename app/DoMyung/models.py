@@ -4,7 +4,7 @@ from .. import db
 class Party(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(30),unique=True)
-    promises = db.relationship('Promise', lazy='dynamic', backref='party')
+    promises = db.relationship('Promise', lazy='dynamic', backref='Party')
 
 
 class Promise(db.Model):

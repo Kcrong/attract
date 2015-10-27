@@ -1,6 +1,6 @@
 from models import Party
 from models import Promise
-from flask import request
+from flask import request, jsonify
 from . import domyung_bp
 
 from .. import db
@@ -26,4 +26,16 @@ def del_promise():
 
 @domyung_bp.route('/list', methods=['GET'])
 def show_promise():
-    return "fixing..."
+    data = []
+    party_id = request.args['party']
+    party = db.session.query(Party).filter_by(id=data['party']).first()
+    p = db.session.query(Promise).filter_by(title=data['title'], details=data['details'], party=party).all()
+    # party is 0 or 1
+    tmp = {}
+
+
+
+
+
+
+
