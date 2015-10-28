@@ -49,6 +49,7 @@
   </style>
   <script>
     var movingTexts = {};
+	var id = 0;
     interact('.draggable')
       .draggable({
         // enable inertial throwing
@@ -68,10 +69,16 @@
         // call this function on every dragmove event
         onmove: dragMoveListener,
 
-    }); // end interact
+		})
+		.on('hold', function (event) {
+			event.currentTarget.classList.toggle('tap');
+		})
+		.on('tap', function (event) {
+		event.currentTarget.classList.toggle('tap');
+		event.preventDefault();
+	  }); // end interact
 
     function dragMoveListener(event) {
-      console.log(1);
       var target = event.target,
         // keep the dragged position in the data-x/data-y attributes
         x = (parseFloat(target.getAttribute('data-x')) || 0) + event.dx,
@@ -117,6 +124,9 @@
         var text = event.relatedTarget.textContent
         event.target.classList.remove('drop-target');
         event.relatedTarget.classList.remove('can-drop');
+		event.relatedTarget.classList.remove('tap');
+
+
         for (var i in movingTexts) 
         {
           try {
@@ -206,6 +216,9 @@
       this.body.innerHTML = text;
       this.body.style.position = 'absolute';
       this.body.setAttribute("class", "draggable drag-drop");
+	  this.body.setAttribute("id", "MovingText_"+id);
+	  id += 1;
+
 
       //문서 객체를 document.body에 추가
       document.body.appendChild(this.body);
@@ -252,7 +265,7 @@
       setInterval(function() {
         for (var i in movingTexts) 
         {
-          if (movingTexts[i].dragIn == false) 
+          if (movingTexts[i].dragIn == false && movingTexts[i].body.classList[2] != 'tap') 
           {
             movingTexts[i].move();
           }
