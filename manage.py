@@ -3,6 +3,7 @@
 from app import app, manager
 from flask import url_for
 
+
 @manager.command
 def list_routes():
     import urllib
@@ -21,6 +22,6 @@ def list_routes():
     for line in sorted(output):
         print line
 
+
 if __name__ == '__main__':
     manager.run()
-

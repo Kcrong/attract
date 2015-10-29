@@ -1,8 +1,9 @@
+import os
+
 from flask import Flask
 from flask.ext.sqlalchemy import SQLAlchemy
 from flask.ext.script import Manager
 from flask.ext.migrate import Migrate, MigrateCommand
-import os
 
 tmpl_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'templates')
 
@@ -21,9 +22,18 @@ def create_app():
     app.config.from_pyfile('../config.cfg')
     return app
 
+
 app = create_app()
 db = SQLAlchemy(app)
+db.init_app(app)
+
+import DoMyung.models
+import account.models
+from DoMyung.models import *
+from account.models import *
+
 migrate = Migrate(app, db)
+
 manager = Manager(app)
 
 manager.add_command('db', MigrateCommand)
