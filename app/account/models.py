@@ -8,7 +8,7 @@ class Users(db.Model):
     fb_id = db.Column(db.String(30), unique=True)
     name = db.Column(db.String(10))
     password = db.Column(db.String(50))
-    active_yn = db.Column(db.BOOLEAN(), nullable=False, default=True)
+    active_yn = db.Column(db.BOOLEAN, nullable=False, default=True)
 
     def __init__(self, userid=None, password=None, fb_id=None, name=None):
         self.password = password
