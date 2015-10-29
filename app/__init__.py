@@ -2,7 +2,7 @@ import os
 
 from flask import Flask
 from flask.ext.sqlalchemy import SQLAlchemy
-from flask.ext.script import Manager
+from flask.ext.script import Manager, Server
 from flask.ext.migrate import Migrate, MigrateCommand
 
 tmpl_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'templates')
@@ -37,3 +37,4 @@ migrate = Migrate(app, db)
 manager = Manager(app)
 
 manager.add_command('db', MigrateCommand)
+manager.add_command('run_allhost', Server(host='0.0.0.0', port=5000))
