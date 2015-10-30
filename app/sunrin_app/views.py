@@ -15,6 +15,11 @@ def select():
     return render_template('select.html')
 
 
+@sunrin_app_blueprint.route('/timeline')
+def timeline():
+    return render_template('timeline.html')
+
+
 # for send static files
 
 @sunrin_app_blueprint.route('/css/<path:filename>')
