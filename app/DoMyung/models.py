@@ -14,11 +14,13 @@ class Party(db.Model):
 class Promise(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     party = db.Column(db.Integer, db.ForeignKey('party.id'))
+    date = db.Column(db.DATE, nullable=False)
     title = db.Column(db.String(30))
     details = db.Column(db.String(300))
-    active_yn = db.Column(db.BOOLEAN, default=True)
+    percentage = db.Column(db.Integer, nullable=False, default=0)
 
-    def __init__(self, title, details, party):
+    def __init__(self, title, details, party, date):
         self.title = title
         self.details = details
         self.party = party
+        self.date = date

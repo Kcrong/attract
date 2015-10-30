@@ -1,7 +1,7 @@
 # -*-coding:utf-8-*-
 
 from . import sunrin_app_blueprint
-from flask import render_template, send_from_directory, send_file
+from flask import render_template, send_from_directory, send_file, redirect
 
 
 @sunrin_app_blueprint.route('/')
@@ -11,13 +11,13 @@ def index():
 
 
 @sunrin_app_blueprint.route('/select')
-def select():
+def go_select():
     return render_template('select.html')
 
 
 @sunrin_app_blueprint.route('/timeline')
-def timeline():
-    return render_template('timeline.html')
+def go_timeline():
+    return redirect('/domyung/timeline')
 
 
 # for send static files
