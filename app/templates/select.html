@@ -31,13 +31,13 @@
       padding: auto;
       width: 99%;
       transition: background-color 0.3s; 
-      z-index: -1;
+      z-index: 1;
     }
 
     #container {
       border: dotted;
-      height: 400px;
-      width: 800px;
+      height: 500px;
+      width: 900px;
     }
     
     .drop-active {
@@ -50,6 +50,13 @@
       border-style: solid;
     }
     
+    .draggable {
+      height: 100px;
+      width: 100px;
+      z-index: 5;
+      overflow-x: visible;
+    }
+
     .drag-drop {
       position: relative;
       display: inline-block;
@@ -70,6 +77,8 @@
 
     .food {
       position: absolute;
+      height: 100px;
+      width: 100px;
       left: 0;
       top: 0
     }
@@ -77,12 +86,10 @@
     .promise_text {
       background-color: rgba( 0, 0, 0, 0.5 );
       z-index: 100;
-      width: 300px;
       position: absolute;
-      padding-top: -500px;
       color: white;
-      font-size: 30px;
-      font-family: 'YoonGothic';
+      font-size: 20px;
+      word-break: break-all;
       //font-weight: bold;
     }
   </style>
@@ -141,13 +148,12 @@
       //accept: '#yes-drop',
 
       // Require a 75% element overlap for a drop to be possible
-      overlap: 0.75,
+      overlap: 0.35,
 
       // listen for drop related events:
       ondropactivate: function(event) {
-        var originTarget = document.getElementById(event.relatedTarget.id);
+        var originTarget = document.getElementById(event.relatedTarget.id).parent;
         event.target.classList.add('drop-active');
-        originTarget.grap = true;
         console.log('ondropactivate');
       },
       ondragenter: function(event) {
@@ -156,16 +162,20 @@
           dropzoneElement = event.target;
 
         var originTarget = document.getElementById(event.relatedTarget.id);
-        //originTarget.dragIn = true;
+        
+        originTarget.setAttribute('class', 'drag-in');
+        console.log('ondragenter');
         dropzoneElement.classList.add('drop-target');
         draggableElement.classList.add('can-drop');
       },
       ondragleave: function(event) {
-
+        var draggableElement = event.relatedTarget,
+          dropzoneElement = event.target;
         var originTarget = document.getElementById(event.relatedTarget.id);
-        originTarget.dragIn = false;
-        originTarget.grap = false;
+        draggableElement.classList.remove('can-drop');
+        draggableElement.classList.remove('drag-in');
         console.log('drag out!');
+
       },
       ondrop: function(event) {
         var originTarget = document.getElementById(event.relatedTarget.id);
@@ -268,7 +278,7 @@
       }
       if (this.y < 0 || this.y > canvasHeight) {
         this.vY *= -1;
-        //console.log('height over');
+        console.log('height over');
       }
       if (this.y > canvasHeight && this.vY > 0) {
         this.vY *= -1;
@@ -285,7 +295,7 @@
     }
 
     window.onload = function() {
-        var texts = ['공약곤냥공냑공양', '공약곤냥공냑공양', '공약곤냥공냑공양', '공약곤냥공냑공양', '공약곤냥공냑공양', '공약곤냥공냑공양', '공약곤냥공냑공양', '공약곤냥공냑공양', '공약곤냥공냑공양', '공약곤냥공냑공양', '공약곤냥공냑공양', '공약곤냥공냑공양', '공약곤냥공냑공양', '공약곤냥공냑공양', '공약곤냥공냑공양', '공약곤냥공냑공양', '공약곤냥공냑공양', '공약곤냥공냑공양', '공약곤냥공냑공양', '공약곤냥공냑공양'];
+        var texts = ['공약곤냥공냑 공양', '공약곤냥공냑공양', '공약곤냥공냑공양', '공약 곤냥공냑공양', '공약곤냥공냑 공양', '공약곤냥공냑 공양', '공약곤냥공냑공양', '공약 곤냥공냑공양', '공약곤냥공냑 공양', '공약곤냥공냑공양', '공약곤냥공냑공양', '공약곤냥공냑공양', '공약곤냥공 냑공양', '공약곤냥공냑공양', '공약곤냥공냑공양', '공약곤냥공냑공양', '공약곤냥공냑 공양', '공약곤냥공냑공양', '공약곤냥공냑공양', '공약곤냥공냑공양'];
         //var texts = ["TEST"];
         //배열에 MovingText 객체 생성
         for (var i in texts) {
@@ -300,7 +310,9 @@
 
         setInterval(function() {
           for (var i in movingTexts) {
-            if (movingTexts[i].dragIn == false && movingTexts[i].body.classList[2] != 'tap') {
+            console.log();
+            if (movingTexts[i].body.classList.contains('drag-in') == false && 
+              movingTexts[i].body.classList[2] != 'tap') {
               movingTexts[i].move();
             }
           }
@@ -313,7 +325,6 @@
 <body>
   <div id="container"></div>
   <div id="hambuger">
-    I am Hamburger
   </div>
 
 </body>
