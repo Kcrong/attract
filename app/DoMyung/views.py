@@ -1,5 +1,6 @@
 from models import Party
 from models import Promise
+from models import Likes
 from flask import request, render_template, send_from_directory
 import json
 from . import domyung_bp
@@ -48,11 +49,22 @@ def show_promise():
     return json.dumps(data)
 
 
+@domyung_bp.route('/like_promise', methods=['POST'])
+def like_promise():
+    data = request.form
+    party = db.session.query(Party).filter_by(id=data['party']).first()
+    promise = db.session.query(Promise).filter_by(party=party.id, date=data['date'])
+    like = db.session.query(Likes).filter_by(promise=promise.id)
+    like.like = data['like']
+    db.session.commit()
+    return True
+
+
 @domyung_bp.route('/edit_percentage', methods=['POST'])
 def edit_percentage():
     data = request.form
-    party = db.session.query(Party).filter_by(id=data['party_id']).first()
-    promise = db.session.query(Promise).filter_by(party=party.id, title=data['title']).first()
+    party = db.session.query(Party).filter_by(id=data['party']).first()
+    promise = db.session.query(Promise).filter_by(party=party.id, title=data['title'], date=data['date']).first()
     promise.percentage = data['percent']
     db.session.commit()
     return "Success"

@@ -9,12 +9,20 @@
     <link href='http://fonts.googleapis.com/css?family=Montserrat:400,700' rel='stylesheet' type='text/css'>
 
 	<link rel="stylesheet" href="css/timeline/reset.css"> <!-- CSS reset -->
+    <link rel="stylesheet" href="css/timeline/modal.css">
 	<link rel="stylesheet" href="css/timeline/style.css"> <!-- Resource style -->
+
+    <link rel="stylesheet" href="css/timeline/foundation.css">
+    <link rel="stylesheet" href="css/timeline/normalize.css">
+
 
 
 	<script src="js/timeline/modernizr.js"></script> <!-- Modernizr -->
-  	
-	<title>Responsive Vertical Timeline</title>
+
+
+	<title>공약 이행표</title>
+
+
 </head>
 
 <body>
@@ -60,15 +68,23 @@
 
                     <div class="cd-timeline-content">
                         {% if data['promise_percent'] == 100 %}
-                        <h2 style="color: brown">
+                        <h2 style="color: brown">{{ data['promise_title'] }} - Complete</h2>
                         {% else %}
-                        <h2>
-                            {{ data['promise_title'] }}</h2>
+                        <h2>{{ data['promise_title'] }}</h2>
                         {% endif %}
+
+
                         <progress value="{{ data['promise_percent'] }}" max="100"></progress>
                         {{ data['promise_percent'] }}%
                         <p>{{ data['promise_info'] }}</p>
-                        <a href="#0" class="cd-read-more">Read more</a>
+
+                        {% if data['promise_percent'] == 100 %}
+                            이 공약이 제대로 지켜졌나요?<br>
+
+                        {% endif %}
+
+                        <a href="javascript:openPopup()" class="cd-read-more" style="float: right;">Read more</a>
+
                         <span class="cd-date">{{ data['promise_date'] }}</span>
                     </div>
                 </div>
@@ -78,108 +94,6 @@
 
 
 
-
-
-<!--
-        <div class="cd-timeline-block-big">
-			<div class="cd-timeline-img cd-dodream cd-big bounce-in" style="padding-top:42px;">
-				<h1 style="text-align: center; color: white">2014</h1>
-			</div>
-
-			<div class="cd-timeline-content" style="visibility: hidden">
-
-			</div>
-		</div>
--->
-
-        <div class="cd-timeline-block">
-			<div class="cd-timeline-img cd-picture bounce-in">
-				<img src="img/timeline/cd-icon-picture.svg" alt="Picture">
-			</div>
-
-			<div class="cd-timeline-content">
-				<h2>I love Dodream</h2>
-
-                <progress value="80" max="100"></progress>
-				<p>asdf</p>
-                <a href="#0" class="cd-read-more">More...</a>
-				<span class="cd-date">Jan 14</span>
-			</div>
-		</div>
-<!--
-		<div class="cd-timeline-block">
-			<div class="cd-timeline-img cd-movie bounce-in">
-				<img src="img/timeline/cd-icon-movie.svg" alt="Movie">
-			</div>
-
-			<div class="cd-timeline-content">
-				<h2>I love SinMyung</h2>
-				<p>SinMyung~~!~!~!~!</p>
-				<a href="#0" class="cd-read-more">Read more</a>
-				<span class="cd-date">Jan 18</span>
-			</div>
-		</div>
-
-		<div class="cd-timeline-block">
-			<div class="cd-timeline-img cd-picture bounce-in">
-				<img src="img/timeline/cd-icon-picture.svg" alt="Picture">
-			</div>
-
-			<div class="cd-timeline-content">
-				<h2>Title of section 3</h2>
-				<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Excepturi, obcaecati, quisquam id molestias eaque asperiores voluptatibus cupiditate error assumenda delectus odit similique earum voluptatem doloremque dolorem ipsam quae rerum quis. Odit, itaque, deserunt corporis vero ipsum nisi eius odio natus ullam provident pariatur temporibus quia eos repellat consequuntur perferendis enim amet quae quasi repudiandae sed quod veniam dolore possimus rem voluptatum eveniet eligendi quis fugiat aliquam sunt similique aut adipisci.</p>
-				<a href="#0" class="cd-read-more">Read more</a>
-				<span class="cd-date">Jan 24</span>
-			</div>
-		</div>
-
-		<div class="cd-timeline-block">
-			<div class="cd-timeline-img cd-location bounce-in">
-				<img src="img/timeline/cd-icon-location.svg" alt="Location">
-			</div>
-
-			<div class="cd-timeline-content">
-				<h2>Title of section 4</h2>
-				<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Iusto, optio, dolorum provident rerum aut hic quasi placeat iure tempora laudantium ipsa ad debitis unde? Iste voluptatibus minus veritatis qui ut.</p>
-				<a href="#0" class="cd-read-more">Read more</a>
-				<span class="cd-date">Feb 14</span>
-			</div>
-		</div>
-
-		<div class="cd-timeline-block-big">
-			<div class="cd-timeline-img cd-sinmyung cd-big bounce-in" style="padding-top:42px;">
-				<h1 style="text-align: center; color: white">2015</h1>
-			</div>
-
-			<div class="cd-timeline-content" style="visibility: hidden">
-
-			</div>
-		</div>
-
-		<div class="cd-timeline-block">
-			<div class="cd-timeline-img cd-location bounce-in">
-				<img src="img/timeline/cd-icon-location.svg" alt="Location">
-			</div> <!
-
-			<div class="cd-timeline-content">
-				<h2>두드림 쀼쀼</h2>
-				<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Iusto, optio, dolorum provident rerum.</p>
-				<a href="#0" class="cd-read-more">Read more</a>
-				<span class="cd-date">Feb 18</span>
-			</div>
-		</div>
-
-		<div class="cd-timeline-block">
-			<div class="cd-timeline-img cd-movie bounce-in">
-				<img src="img/timeline/cd-icon-movie.svg" alt="Movie">
-			</div>
-			<div class="cd-timeline-content">
-				<h2>Final Section</h2>
-				<p>This is the content of the last section</p>
-				<span class="cd-date">Feb 26</span>
-			</div>
-		</div>
--->
 
 	</section> <!-- cd-timeline -->
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
