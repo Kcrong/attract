@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <!--Import Google Icon Font-->
+  <link href="http://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <!--Import materialize.css-->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.1/css/materialize.min.css">
+
+
+  <!--Let browser know website is optimized for mobile-->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+</head>
+
+<body>
+  <div class="row" id="wrapper">
+    <div class="row" id="container">
+      <div class="input-field col s12">
+        <input id="promise0" type="text" class="validate">
+        <label for="promise0">공약</label>
+      </div>
+    </div>
+    <form class="col s3">
+      <div class="card-panel hoverable details">
+        <div class="row">
+          <div class="row">
+            <input type="checkbox" id="test0" class="chk" onclick="javascript:disable(this)"/>
+            <label for="test0"></label>
+        
+            <div class="input-field col s12">
+              <input id="detail0" type="text">
+              <label for="detail0">세부 계획 제목</label>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="input-field col s12">
+              <textarea id="textarea0" class="materialize-textarea"></textarea>
+              <label for="textarea0">설명</label>
+            </div>
+          </div>
+
+          <div class="file-field input-field row">
+            <div class="btn">
+              <span>File</span>
+              <input type="file">
+            </div>
+            <div class="file-path-wrapper col s6">
+              <input class="file-path validate" type="text">
+            </div>
+          </div>
+          <div class="row add-card">
+            <a href="javascript:void(0);" onclick="javascript:appendCard(this);"><i class="large  material-icons">playlist_add</i></a>
+          </div>
+        </div>
+      </div> <!-- end of details -->
+    </form>
+  </div>
+
+  <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.1/js/materialize.min.js"></script>
+<script>
+  var formCnt=1;
+  function appendCard(res) {
+    /*
+    title = document.createElement('div');
+    title.setAttribute('')
+
+    detailForm = document.createElement('form');
+    detailForm.setAttribute('class', 'col s6');
+    
+    document.getElementById('container').innerHTML+=detail.outerHTML;
+    */
+    
+    $('.add-card').remove();
+    
+    var form = $(''+
+    '<form class="col s3">'+
+      '<div class="card-panel hoverable details">'+
+        '<div class="row">'+
+          '<div class="row">'+
+            '<input type="checkbox" id="test'+formCnt+'" class="chk" onclick="javascript:disable(this)"/>'+
+            '<label for="test'+formCnt+'"></label>'+
+            '<div class="input-field col s12">'+
+              '<input id="detail'+formCnt+'" type="text">'+
+              '<label for="detail'+formCnt+'">세부 계획 제목</label>'+
+            '</div>'+
+          '</div>'+
+
+          '<div class="row">'+
+            '<div class="input-field col s12">'+
+              '<textarea id="textarea'+formCnt+'" class="materialize-textarea"></textarea>'+
+              '<label for="textarea'+formCnt+'">설명</label>'+
+            '</div>'+
+          '</div>'+
+
+          '<div class="file-field input-field row">'+
+            '<div class="btn">'+
+              '<span>File</span>'+
+              '<input type="file">'+
+            '</div>'+
+            '<div class="file-path-wrapper col s6">'+
+              '<input class="file-path validate" type="text">'+
+            '</div>'+
+          '</div>'+
+          '<div class="row add-card" autofocus>'+
+            '<a href="javascript:void(0);" onclick="javascript:appendCard(this);"><i class="large  material-icons">playlist_add</i></a>'+
+          '</div>'+
+        '</div>'+
+      '</div> <!-- end of details -->'+
+    '</form>');
+    
+    $("form").last().after(form);
+    form.focus();
+    formCnt += 1;
+  }
+
+  function disable(res){
+    var chk = $(res);
+    var detail = chk.parent().parent().parent();
+    console.log(detail);
+    var inputs = detail.find('input');
+    inputs.push(detail.find('textarea')[0]);
+    console.log(inputs);
+    if(chk.prop("checked") == true) {
+      for(var i=0; i<inputs.length; i++) {
+        console.log('true');
+        if(inputs[i].type == 'checkbox')
+          continue;
+        inputs[i].setAttribute('disabled','');
+      }
+    }
+    
+    else {
+      for(var i=0; i<inputs.length; i++) {
+        if(inputs[i].type == 'checkbox')
+          continue;
+        inputs[i].removeAttribute('disabled');
+      }
+    }
+      
+
+  };
+
+  
+  $('.disable','click', function(res) {
+    alert(res);
+  });
+</script>
+</body>
+
+</html>
