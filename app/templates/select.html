@@ -11,8 +11,14 @@
 
   <!-- 보조 함수 -->
   <style>
+  @font-face{font-family:'YoonGothic'; src:url('../static/fonts/yoongodic.eot')}
     html {
       overflow: hidden;
+      font-family: 'YoonGothic';
+    }
+
+    p {
+      font-family: 
     }
     #hambuger {
       height: 100px;
@@ -30,8 +36,8 @@
 
     #container {
       border: dotted;
-      height: 500px;
-      width: 500px;
+      height: 400px;
+      width: 800px;
     }
     
     .drop-active {
@@ -47,8 +53,8 @@
     .drag-drop {
       position: relative;
       display: inline-block;
-      min-width: 20px;
-      padding: 2em 0.5em;
+      //min-width: 20px;
+      //padding: 2em 0.5em;
       color: #fff;
       /*background-color: #29e;
       border: solid 2px #fff;*/
@@ -76,7 +82,8 @@
       padding-top: -500px;
       color: white;
       font-size: 30px;
-      font-weight: bold;
+      font-family: 'YoonGothic';
+      //font-weight: bold;
     }
   </style>
   <script>
@@ -138,9 +145,9 @@
 
       // listen for drop related events:
       ondropactivate: function(event) {
-        var target = event.relatedTarget;
+        var originTarget = document.getElementById(event.relatedTarget.id);
         event.target.classList.add('drop-active');
-        target.grap = true;
+        originTarget.grap = true;
         console.log('ondropactivate');
       },
       ondragenter: function(event) {
@@ -148,62 +155,22 @@
         var draggableElement = event.relatedTarget,
           dropzoneElement = event.target;
 
-        for (var i in movingTexts) {
-          console.log(movingTexts[i]);
-          try {
-            mText = movingTexts[i].body.innerHTML;
-          } catch (ex) {
-            mText = "";
-            console.log(ex);
-          }
-
-          if (mText == text) {
-            console.log("delete")
-            movingTexts[i].dragIn = true;
-            break;
-          }
-        }
-
+        var originTarget = document.getElementById(event.relatedTarget.id);
+        //originTarget.dragIn = true;
         dropzoneElement.classList.add('drop-target');
         draggableElement.classList.add('can-drop');
       },
       ondragleave: function(event) {
 
-        var text = event.relatedTarget.textContent
-        event.target.classList.remove('drop-target');
-        event.relatedTarget.classList.remove('can-drop');
-        event.relatedTarget.classList.remove('tap');
-
-        for (var i in movingTexts) {
-          try {
-            mText = movingTexts[i].body.innerHTML;
-          } catch (ex) {
-            mText = "";
-            console.log(ex);
-          }
-          if (mText == text)
-            movingTexts[i].dragIn = false;
-        } // movingTexts 의 내용이랑 target text내용이랑 비교해서 일치하면 drag leave 됬다고 판정.
-
+        var originTarget = document.getElementById(event.relatedTarget.id);
+        originTarget.dragIn = false;
+        originTarget.grap = false;
         console.log('drag out!');
       },
       ondrop: function(event) {
-        var text = event.relatedTarget.textContent
-        for (var i in movingTexts) {
-          console.log(movingTexts[i]);
-          try {
-            mText = movingTexts[i].body.innerHTML;
-          } catch (ex) {
-            mText = "";
-            console.log(ex);
-          }
-
-          if (mText == text) {
-            console.log("delete")
-            movingTexts[i].dragIn = true;
-            break;
-          }
-        } // // movingTexts 의 내용이랑 target text내용이랑 비교해서 일치하면 on drop 됬다고 판정.
+        var originTarget = document.getElementById(event.relatedTarget.id);
+        console.log('drag in!');
+        originTarget.dragIn = true;
       },
       ondropdeactivate: function(event) {
 
@@ -268,12 +235,14 @@
       this.body.innerHTML += promise.outerHTML;
       this.body.style.fontSize = "35px";
       this.body.style.fontWeight = 'bold';
-      this.body.style.fontFamily = "Neo";
+      this.body.style.fontFamily = "YoonGothic";
       //this.body.innerHTML += text;
       this.body.style.position = 'absolute';
       this.body.setAttribute("class", "draggable drag-drop");
       this.body.setAttribute("id", "MovingText_" + id);
       id += 1;
+
+      this.grap = false;
 
 
       //문서 객체를 document.body에 추가
@@ -283,11 +252,15 @@
 
     MovingText.prototype.move = function() {
       if (this.grap == true)
+      {
+
+        console.log('suc');
         return;
+      }
       //범위 검사
       if (this.x < 0 || this.x > canvasWidth) {
         this.vX *= -1;
-        console.log('Over width')
+        //console.log('Over width')
       }
       if (this.x > canvasWidth && this.vX > 0) {
         this.vX *= -1;
@@ -295,7 +268,7 @@
       }
       if (this.y < 0 || this.y > canvasHeight) {
         this.vY *= -1;
-        console.log('height over');
+        //console.log('height over');
       }
       if (this.y > canvasHeight && this.vY > 0) {
         this.vY *= -1;
@@ -322,7 +295,7 @@
 
         setInterval(function() {
           canvasWidth = $('#container').innerWidth() - 45;
-          canvasHeight = $('#container').innerHeight() - 91;
+          canvasHeight = $('#container').innerHeight();
         }, 500); // end setInterval
 
         setInterval(function() {
