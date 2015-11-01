@@ -20,6 +20,15 @@ def go_timeline():
     return redirect('/domyung/timeline')
 
 
+@sunrin_app_blueprint.route('/admin')
+def promise_list():
+    return render_template('promise_list.html')
+
+
+@sunrin_app_blueprint.route('/testing')
+def complete_select():
+    return render_template('complete_select.html')
+
 # for send static files
 
 @sunrin_app_blueprint.route('/css/<path:filename>')
