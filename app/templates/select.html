@@ -6,7 +6,7 @@
   <meta charset="UTF-8">
   <script src="../static/js/select/jquery.min.js"></script>
   <script src="../static/js/random.js"></script>
-  <script src="http://cdn.jsdelivr.net/interact.js/1.2.4/interact.min.js"></script>
+  <script src="http://cdn.jsdelivr.net/interact.js/1.2.6/interact.min.js"></script>
   <title>example</title>
 
   <!-- 보조 함수 -->
@@ -20,7 +20,7 @@
     p {
       font-family: 
     }
-    #hambuger {
+    #cutting-board {
       height: 100px;
       position: fixed;
       bottom: 5px;
@@ -93,7 +93,16 @@
       //font-weight: bold;
     }
   </style>
-  <script>
+
+</head>
+
+
+<body>
+  <div id="container"></div>
+  <div id="cutting-board">
+  </div>
+
+    <script>
     var movingTexts = {};
     var id = 0;
     interact('.draggable')
@@ -117,10 +126,10 @@
 
       })
       .on('hold', function(event) {
-        event.currentTarget.classList.toggle('tap');
+        event.currentTarget.classList.toggle('moving');
       })
       .on('tap', function(event) {
-        event.currentTarget.classList.toggle('tap');
+        event.currentTarget.classList.toggle('moving');
         event.preventDefault();
       }); // end interact
 
@@ -143,7 +152,7 @@
     // this is used later in the resizing demo
     window.dragMoveListener = dragMoveListener;
 
-    interact('#hambuger').dropzone({
+    interact('#cutting-board').dropzone({
       // only accept elements matching this CSS selector
       //accept: '#yes-drop',
 
@@ -163,7 +172,7 @@
 
         var originTarget = document.getElementById(event.relatedTarget.id);
         
-        originTarget.setAttribute('class', 'drag-in');
+        originTarget.classList.add('drag-in');
         console.log('ondragenter');
         dropzoneElement.classList.add('drop-target');
         draggableElement.classList.add('can-drop');
@@ -179,6 +188,7 @@
       },
       ondrop: function(event) {
         var originTarget = document.getElementById(event.relatedTarget.id);
+        originTarget.classList.remove('moving');
         console.log('drag in!');
         originTarget.dragIn = true;
       },
@@ -212,7 +222,7 @@
 
     //양음으로 랜덤한 속도를 생성하는 함수
     function randomSpeed(maxSpeed) {
-      return Math.random();
+      return Math.random()*maxSpeed;
     }
 
     var canvasWidth = $('#container').innerWidth();
@@ -220,10 +230,12 @@
     var collect = "";
 
     function MovingText(i, text) {
+      console.log(canvasHeight,canvasWidth);
       this.x = nextRandomInteger(canvasWidth);
       this.y = nextRandomInteger(canvasHeight);
-      this.vX = randomSpeed(10);
-      this.vY = randomSpeed(10);
+      console.log(this.x, this.y);
+      this.vX = randomSpeed(2.0);
+      this.vY = randomSpeed(2.0);
 
       this.rate = 10;
       this.elmH = Math.floor(Math.random() * 360) + 1; // Hue
@@ -248,7 +260,7 @@
       this.body.style.fontFamily = "YoonGothic";
       //this.body.innerHTML += text;
       this.body.style.position = 'absolute';
-      this.body.setAttribute("class", "draggable drag-drop");
+      this.body.setAttribute("class", "draggable drag-drop moving");
       this.body.setAttribute("id", "MovingText_" + id);
       id += 1;
 
@@ -261,12 +273,6 @@
     }
 
     MovingText.prototype.move = function() {
-      if (this.grap == true)
-      {
-
-        console.log('suc');
-        return;
-      }
       //범위 검사
       if (this.x < 0 || this.x > canvasWidth) {
         this.vX *= -1;
@@ -278,7 +284,7 @@
       }
       if (this.y < 0 || this.y > canvasHeight) {
         this.vY *= -1;
-        console.log('height over');
+        //console.log('height over');
       }
       if (this.y > canvasHeight && this.vY > 0) {
         this.vY *= -1;
@@ -311,22 +317,13 @@
         setInterval(function() {
           for (var i in movingTexts) {
             console.log();
-            if (movingTexts[i].body.classList.contains('drag-in') == false && 
-              movingTexts[i].body.classList[2] != 'tap') {
+            if (movingTexts[i].body.classList.contains('moving') == true) {
               movingTexts[i].move();
             }
           }
         }, 20); // end setInterval
       } // end window.onload
   </script>
-</head>
-
-
-<body>
-  <div id="container"></div>
-  <div id="hambuger">
-  </div>
-
 </body>
 
 </html>
