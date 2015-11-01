@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html style="background-color: #2C3E50">
+<html>
 
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -12,19 +12,26 @@
   <!-- 보조 함수 -->
   <style>
   @font-face{font-family:'YoonGothic'; src:url('../static/fonts/yoongodic.eot')}
-    html {
+    body {
       overflow: hidden;
       font-family: 'YoonGothic';
+      background-image: url('C:\\Users\\ner0\\Desktop\\Archive\\bg.png');
+      background-size: cover;
+      background-repeat: no-repeat;
+      width:100%;
+      height: 80%;
     }
 
     p {
       font-family: 
     }
     #cutting-board {
+      //background-image: url('../static/images/asdf/cutting-board.png');
+      background-repeat: no-repeat;
       height: 100px;
       position: fixed;
       bottom: 5px;
-      background-color: #ccc;
+      //background-color: #ccc;
       border: dashed 4px transparent;
       border-radius: 4px;
       margin-bottom: : -5000px;
@@ -45,7 +52,7 @@
     }
     
     .drop-target {
-      background-color: #29e;
+      //background-color: #29e;
       border-color: #fff;
       border-style: solid;
     }
@@ -55,6 +62,10 @@
       width: 100px;
       z-index: 5;
       overflow-x: visible;
+    }
+
+    .drag-in {
+      //padding: center;
     }
 
     .drag-drop {
@@ -72,7 +83,7 @@
     
     .drag-drop.can-drop {
       color: #000;
-      background-color: #4e4;
+      //background-color: #4e4;
     }
 
     .food {
@@ -98,9 +109,11 @@
 
 
 <body>
+  <div id="wrapper">
   <div id="container"></div>
   <div id="cutting-board">
   </div>
+</div>
 
     <script>
     var movingTexts = {};
@@ -126,11 +139,15 @@
 
       })
       .on('hold', function(event) {
-        event.currentTarget.classList.toggle('moving');
+        if( event.currentTarget.classList.contains('drag-in') == false)
+          event.currentTarget.classList.toggle('moving');
       })
       .on('tap', function(event) {
-        event.currentTarget.classList.toggle('moving');
-        event.preventDefault();
+        if( event.currentTarget.classList.contains('drag-in') == false)
+        { 
+          event.currentTarget.classList.toggle('moving');
+          event.preventDefault();
+        }
       }); // end interact
 
     function dragMoveListener(event) {
@@ -183,12 +200,15 @@
         var originTarget = document.getElementById(event.relatedTarget.id);
         draggableElement.classList.remove('can-drop');
         draggableElement.classList.remove('drag-in');
+        originTarget.classList.add('moving');
         console.log('drag out!');
 
       },
       ondrop: function(event) {
         var originTarget = document.getElementById(event.relatedTarget.id);
         originTarget.classList.remove('moving');
+        originTarget.style.left=$(window).innerWidth()/2+"px";
+        console.log(originTarget.style);
         console.log('drag in!');
         originTarget.dragIn = true;
       },
@@ -302,7 +322,7 @@
 
     window.onload = function() {
         var texts = ['공약곤냥공냑 공양', '공약곤냥공냑공양', '공약곤냥공냑공양', '공약 곤냥공냑공양', '공약곤냥공냑 공양', '공약곤냥공냑 공양', '공약곤냥공냑공양', '공약 곤냥공냑공양', '공약곤냥공냑 공양', '공약곤냥공냑공양', '공약곤냥공냑공양', '공약곤냥공냑공양', '공약곤냥공 냑공양', '공약곤냥공냑공양', '공약곤냥공냑공양', '공약곤냥공냑공양', '공약곤냥공냑 공양', '공약곤냥공냑공양', '공약곤냥공냑공양', '공약곤냥공냑공양'];
-        //var texts = ["TEST"];
+        //var texts = ["빌:공약", "선린 챔스"];
         //배열에 MovingText 객체 생성
         for (var i in texts) {
           movingTexts[i] = new MovingText(i, texts[i]);
@@ -317,7 +337,8 @@
         setInterval(function() {
           for (var i in movingTexts) {
             console.log();
-            if (movingTexts[i].body.classList.contains('moving') == true) {
+            if (movingTexts[i].body.classList.contains('moving') == true && 
+              movingTexts[i].body.classList.contains('drop-activate') == false) {
               movingTexts[i].move();
             }
           }
