@@ -130,12 +130,16 @@
                 <img src="img/timeline/back.png" alt="back" style="vertical-align: middle; margin-left: 10px">
             </div>
         </a>
-        <a href="setting">
+        <a href="/account/setting">
         <div id="right">
             <img src="img/timeline/setting.png" alt="setting" style="vertical-align: middle; margin-right: 10px">
         </div>
         </a>
+        {% if username == 'dodream' or username == 'sinmyung' %}
+        <h1>연표 이행도 Administrator Mode</h1>
+        {% else %}
         <h1>연표 이행도</h1>
+        {% endif %}
     </header>
 	<section id="cd-timeline" class="cd-container" style="margin-top: 0px">
         <!-- for title -->
@@ -187,11 +191,9 @@
                         {{ data['promise_percent'] }}%
                         <p>{{ data['promise_info'] }}</p>
 
-                        {% if data['promise_percent'] == 100 %}
-                            이 공약이 제대로 지켜졌나요?<br>
-
-                        {% endif %}
-
+                    {% if username == 'dodream' or username == 'sinmyung' %}
+                        <a href="/account/setting?promise={{ data['promise_title'] }}" class="cd=read-more" style="float: left;">Edit</a>
+                    {% endif %}
                         <a href="#{{ data['promise_title'] }}" class="cd-read-more modal-trigger" style="float: right;">Read more</a>
 
                         <span class="cd-date">{{ data['promise_date'] }}</span>

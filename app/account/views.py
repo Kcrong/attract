@@ -2,6 +2,7 @@ from flask import render_template, redirect, url_for, request, flash, session
 from flask_login import current_user, login_user, logout_user, login_required
 from flask.ext.oauth import OAuth
 from models import Users
+from ..DoMyung.models import Promise, Checklist
 from app.account.login_manage import User, login_manager
 
 from . import account_bp
@@ -46,7 +47,7 @@ def login():
             user = User(userid)
             login_user(user)
             session['username'] = userid
-            return redirect(url_for('.home'))
+            return redirect(url_for('.admin'))
         else:
             return 'Bad Login'
 
@@ -96,3 +97,27 @@ def get_facebook_oauth_token():
 def logout():
     logout_user()
     return 'Logged out'
+
+
+@account_bp.route('/admin')
+@login_required
+def admin():
+    return render_template('promise_list.html')
+
+
+@account_bp.route('/setting', methods=['GET'])
+@login_required
+def setting():
+    #return "fixing..."
+
+    promise = request.args['promise']
+
+    #promise_db = db.session.query(Promise).filter_by(title=promise).first()
+    #checklists = db.session.query(Checklist).filter_by(promise=promise_db.id).all()
+    return render_template('admin.html',
+                           promise=promise)
+
+
+@login_manager.unauthorized_handler
+def go_login():
+    return redirect('/account/login')

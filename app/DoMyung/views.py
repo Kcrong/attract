@@ -1,14 +1,25 @@
-#-*-coding: utf-8 -*-
+# -*-coding: utf-8 -*-
 from models import Party
 from models import Promise
 from models import Likes
-from flask import request, render_template, send_from_directory
+from models import Checklist
+from flask import request, render_template, send_from_directory, session, redirect
 import json
 from . import domyung_bp
 from sqlalchemy import extract
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.sql import func
 from .. import db
+import os
+import random
+import string
+
+
+def randomkey(length):
+    return ''.join(random.choice(string.lowercase) for i in range(length))
+
+
+domyung_bp.static_folder = os.path.join(domyung_bp.root_path, '../static/')
 
 
 @domyung_bp.route('/add', methods=['POST'])
@@ -55,11 +66,6 @@ def select():
     return render_template('select.html')
 
 
-@domyung_bp.route('/setting')
-def admin():
-    return render_template('promise_list.html')
-
-
 @domyung_bp.route('/result')
 def select_result():
     return render_template('complete_select.html')
@@ -86,8 +92,31 @@ def edit_percentage():
     return "Success"
 
 
+@domyung_bp.route('/add_checklist', methods=['POST'])
+def add_checklist():
+    data = request.form
+    page = data['page']
+    title = data['detail_title']
+    description = data['description']
+    promise = data['promise']
+    image = request.files['image']
+    filename = randomkey(len(image.filename)) + '.' + image.filename.rsplit('.', 1)[1]
+    path = '../static/images/checklist/' + filename
+    path = os.path.join(domyung_bp.root_path, path)
+
+    image.save(path)
+    promise_obj = db.session.query(Promise).filter_by(title=promise).first()
+    db.session.add(Checklist(page, filename, description, title, promise_obj.id))
+    db.session.commit()
+    return redirect('/account/setting?promise=' + promise)
+
+
 @domyung_bp.route('/timeline')
 def timeline():
+    try:
+        username = session['username']
+    except KeyError:
+        username = 'Anonymous'
     date_range = db.session.query(func.min(Promise.date).label("min_year"),
                                   func.max(Promise.date).label("max_year")).one()
     years = range(date_range[0].year, date_range[1].year + 1)
@@ -109,7 +138,8 @@ def timeline():
 
     return render_template('timeline.html',
                            promise_data=all_promises,
-                           years=years)
+                           years=years,
+                           username=username)
 
 
 # for send static files
@@ -129,6 +159,7 @@ def img_static(filename):
     return send_from_directory(domyung_bp.root_path + '/../static/images/', filename)
 
 
+"""
 #@domyung_bp.route('/add_db_info')
 def asdf():
     sinmyung = db.session.query(Party).filter_by(id=1).first()
@@ -148,3 +179,4 @@ def asdf():
 
     db.session.commit()
     return "AsdF"
+"""

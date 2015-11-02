@@ -52,4 +52,4 @@ class Checklist(db.Model):
         self.picture = picture
         self.info = info
         self.title = title
-        self.promise
+        self.promise = promise

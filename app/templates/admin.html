@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<!-- saved from url=(0057)file:///C:/Users/ner0/AppData/Local/Temp/tmpCBA5.tmp.html -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta charset="utf-8">
+  <!--Import Google Icon Font-->
+  <!--Import materialize.css-->
+  <!-- Compiled and minified CSS -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.1/css/materialize.min.css">
+
+  <!-- Compiled and minified JavaScript -->
+  <script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.1/js/materialize.min.js"></script>
+          
+
+  <!--Let browser know website is optimized for mobile-->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+</head>
+
+<body>
+  <div class="row" id="wrapper">
+    <div class="row" id="container">
+      <div class="input-field col s12">
+        <h3>{{ promise }}</h3>
+        <label for="promise0"></label>
+      </div>
+    </div>
+    <form class="col s3" action="/domyung/add_checklist" enctype="multipart/form-data" method="post">
+      <div class="card-panel hoverable details">
+        <div class="row">
+          <div class="row">
+            <input type="checkbox" name="check_yn" id="test0" class="chk" onclick="javascript:disable(this)">
+            <label for="test0">완료</label>
+        
+            <div class="input-field col s12">
+              <input name="detail_title" id="detail0" type="text">
+              <label for="detail0">세부 계획 제목</label>
+            </div>
+          </div>
+            <input type="hidden" name="promise" value="{{ promise }}">
+            <input type="hidden" name="page" value="0">
+          <div class="row">
+            <div class="input-field col s12">
+              <textarea name="description" id="textarea0" class="materialize-textarea"></textarea>
+              <label for="textarea0">설명</label>
+            </div>
+          </div>
+
+          <div class="file-field input-field row">
+            <div class="btn">
+              <span>File</span>
+              <input type="file" name="image">
+            </div>
+            <div class="file-path-wrapper col s6">
+              <input class="file-path validate" type="text" name="image_filename">
+            </div>
+          </div>
+
+          <div class="row add-card">
+            <a href="javascript:void(0);" onclick="javascript:appendCard(this);"><i class="small material-icons">Add Checklist</i></a>
+          </div>
+
+            <input type="submit" value="Save">
+        </div>
+      </div> <!-- end of details -->
+    </form>
+  </div>
+
+<script>
+  var formCnt=1;
+  function appendCard(res) {
+    /*
+    title = document.createElement('div');
+    title.setAttribute('')
+
+    detailForm = document.createElement('form');
+    detailForm.setAttribute('class', 'col s6');
+    
+    document.getElementById('container').innerHTML+=detail.outerHTML;
+    */
+    
+    $('.add-card').remove();
+    
+    var form = $(''+
+    '<form class="col s3" action="add_checklist">'+
+      '<div class="card-panel hoverable details">'+
+        '<div class="row">'+
+          '<div class="row">'+
+            '<input type="checkbox" name="check_yn'+formCnt+'" id="test'+formCnt+'" class="chk" onclick="javascript:disable(this)"/>'+
+            '<label for="test'+formCnt+'"></label>'+
+            '<div class="input-field col s12">'+
+              '<input name="detail_title" id="detail'+formCnt+'" type="text">'+
+              '<label for="detail'+formCnt+'">세부 계획 제목</label>'+
+            '</div>'+
+          '</div>'+
+          '<input type="hidden" name="promise" value="{{ promise }}">' +
+          '<input type="hidden" name="page" value="'+formCnt+'">' +
+
+          '<div class="row">'+
+            '<div class="input-field col s12">'+
+              '<textarea name="description" id="textarea'+formCnt+'" class="materialize-textarea"></textarea>'+
+              '<label for="textarea'+formCnt+'">설명</label>'+
+            '</div>'+
+          '</div>'+
+
+          '<div class="file-field input-field row">'+
+            '<div class="btn">'+
+              '<span>File</span>'+
+              '<input type="file" name="image">'+
+            '</div>'+
+            '<div class="file-path-wrapper col s6">'+
+              '<input class="file-path validate" type="text" name="image_filename">'+
+            '</div>'+
+          '</div>'+
+          '<div class="row add-card" autofocus>'+
+            '<a href="javascript:void(0);" onclick="javascript:appendCard(this);"><i class="small material-icons">Add Checklist</i></a>'+
+            '<input type="submit" value="Save">' +
+          '</div>'+
+        '</div>'+
+      '</div> <!-- end of details -->'+
+    '</form>');
+    
+    $("form").last().after(form);
+    form.focus();
+    formCnt += 1;
+  }
+
+  function disable(res){
+    var chk = $(res);
+    var detail = chk.parent().parent().parent();
+    console.log(detail);
+    var inputs = detail.find('input');
+    inputs.push(detail.find('textarea')[0]);
+    console.log(inputs);
+    if(chk.prop("checked") == true) {
+      for(var i=0; i<inputs.length; i++) {
+        console.log('true');
+        if(inputs[i].type == 'checkbox')
+          continue;
+        inputs[i].setAttribute('disabled','');
+      }
+    }
+    
+    else {
+      for(var i=0; i<inputs.length; i++) {
+        if(inputs[i].type == 'checkbox')
+          continue;
+        inputs[i].removeAttribute('disabled');
+      }
+    }
+      
+
+  };
+
+  
+  $('.disable','click', function(res) {
+    alert(res);
+  });
+</script>
+
+
+<div class="hiddendiv common"></div></body></html>
