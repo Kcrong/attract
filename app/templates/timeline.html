@@ -159,7 +159,11 @@
             {%  for data in promise_data[year|string] %}
 
                 <div class="cd-timeline-block">
+                {% if promise_data[year|string][0]['promise_party'] == 2 %}
                     <div class="cd-timeline-img cd-dodream bounce-in">
+                {% else %}
+                    <div class="cd-timeline-img cd-sinmyung bounce-in">
+                {% endif %}
 
                         <img src="img/timeline/cd-icon-picture.svg" alt="Picture">
                     </div>

@@ -1,23 +1,50 @@
 <!DOCTYPE html>
-<html style="background-color: #2C3E50">
+<html>
 
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
   <meta charset="UTF-8">
-  <script src="/js/select/jquery.min.js"></script>
-  <script src="http://cdn.jsdelivr.net/interact.js/1.2.4/interact.min.js"></script>
+  <script src="js/select/jquery.min.js"></script>
+  <script src="js/select/random.js"></script>
+  <script src="http://cdn.jsdelivr.net/interact.js/1.2.6/interact.min.js"></script>
   <title>example</title>
 
   <!-- 보조 함수 -->
   <style>
-    #outer-dropzone {
-      height: 140px;
-      background-color: #ccc;
+  @font-face{font-family:'YoonGothic'; src:url('../static/fonts/yoongodic.eot')}
+    body {
+      overflow: hidden;
+      font-family: 'YoonGothic';
+      background-image: url('img/select/bg.png');
+      background-size: cover;
+      background-repeat: no-repeat;
+      width:100%;
+      height: 80%;
+    }
+
+    p {
+      font-family: 
+    }
+    #cutting-board {
+      //background-image: url('img/select/cutting-board.png');
+      background-repeat: no-repeat;
+      height: 100px;
+      position: fixed;
+      bottom: 5px;
+      //background-color: #ccc;
       border: dashed 4px transparent;
       border-radius: 4px;
-      margin: 500px 500px 100px 100px;
-      width: 80%;
-      transition: background-color 0.3s;
+      margin-bottom: : -5000px;
+      padding: auto;
+      width: 99%;
+      transition: background-color 0.3s; 
+      z-index: 1;
+    }
+
+    #container {
+      border: dotted;
+      height: 500px;
+      width: 900px;
     }
     
     .drop-active {
@@ -25,18 +52,30 @@
     }
     
     .drop-target {
-      background-color: #29e;
+      //background-color: #29e;
       border-color: #fff;
       border-style: solid;
     }
     
+    .draggable {
+      height: 100px;
+      width: 100px;
+      z-index: 5;
+      overflow-x: visible;
+    }
+
+    .drag-in {
+      //padding: center;
+    }
+
     .drag-drop {
+      position: relative;
       display: inline-block;
-      min-width: 40px;
-      padding: 2em 0.5em;
+      //min-width: 20px;
+      //padding: 2em 0.5em;
       color: #fff;
-      background-color: #29e;
-      border: solid 2px #fff;
+      /*background-color: #29e;
+      border: solid 2px #fff;*/
       -webkit-transform: translate(0px, 0px);
       transform: translate(0px, 0px);
       transition: background-color 0.3s;
@@ -44,12 +83,41 @@
     
     .drag-drop.can-drop {
       color: #000;
-      background-color: #4e4;
+      //background-color: #4e4;
+    }
+
+    .food {
+      position: absolute;
+      height: 100px;
+      width: 100px;
+      left: 0;
+      top: 0
+    }
+
+    .promise_text {
+      background-color: rgba( 0, 0, 0, 0.5 );
+      z-index: 100;
+      position: absolute;
+      color: white;
+      font-size: 20px;
+      word-break: break-all;
+      //font-weight: bold;
     }
   </style>
-  <script>
+
+</head>
+
+
+<body>
+  <div id="wrapper">
+  <div id="container"></div>
+  <div id="cutting-board">
+  </div>
+</div>
+
+    <script>
     var movingTexts = {};
-	var id = 0;
+    var id = 0;
     interact('.draggable')
       .draggable({
         // enable inertial throwing
@@ -69,14 +137,18 @@
         // call this function on every dragmove event
         onmove: dragMoveListener,
 
-		})
-		.on('hold', function (event) {
-			event.currentTarget.classList.toggle('tap');
-		})
-		.on('tap', function (event) {
-		event.currentTarget.classList.toggle('tap');
-		event.preventDefault();
-	  }); // end interact
+      })
+      .on('hold', function(event) {
+        if( event.currentTarget.classList.contains('drag-in') == false)
+          event.currentTarget.classList.toggle('moving');
+      })
+      .on('tap', function(event) {
+        if( event.currentTarget.classList.contains('drag-in') == false)
+        { 
+          event.currentTarget.classList.toggle('moving');
+          event.preventDefault();
+        }
+      }); // end interact
 
     function dragMoveListener(event) {
       var target = event.target,
@@ -97,66 +169,48 @@
     // this is used later in the resizing demo
     window.dragMoveListener = dragMoveListener;
 
-    interact('#outer-dropzone').dropzone({
+    interact('#cutting-board').dropzone({
       // only accept elements matching this CSS selector
       //accept: '#yes-drop',
 
       // Require a 75% element overlap for a drop to be possible
-      overlap: 0.75,
+      overlap: 0.35,
 
       // listen for drop related events:
       ondropactivate: function(event) {
-        var target = event.relatedTarget;
+        var originTarget = document.getElementById(event.relatedTarget.id).parent;
         event.target.classList.add('drop-active');
-        target.dragIn = true;
         console.log('ondropactivate');
       },
       ondragenter: function(event) {
 
         var draggableElement = event.relatedTarget,
-        dropzoneElement = event.target;
+          dropzoneElement = event.target;
 
+        var originTarget = document.getElementById(event.relatedTarget.id);
+        
+        originTarget.classList.add('drag-in');
+        console.log('ondragenter');
         dropzoneElement.classList.add('drop-target');
         draggableElement.classList.add('can-drop');
       },
       ondragleave: function(event) {
+        var draggableElement = event.relatedTarget,
+          dropzoneElement = event.target;
+        var originTarget = document.getElementById(event.relatedTarget.id);
+        draggableElement.classList.remove('can-drop');
+        draggableElement.classList.remove('drag-in');
+        originTarget.classList.add('moving');
+        console.log('drag out!');
 
-        var text = event.relatedTarget.textContent
-        event.target.classList.remove('drop-target');
-        event.relatedTarget.classList.remove('can-drop');
-		event.relatedTarget.classList.remove('tap');
-
-
-        for (var i in movingTexts) 
-        {
-          try {
-            mText = movingTexts[i].body.innerHTML;
-          } catch (ex) {
-            mText = "";
-            console.log(ex);
-          }
-          if (mText == text)
-            movingTexts[i].dragIn = false;
-        } // movingTexts 의 내용이랑 target text내용이랑 비교해서 일치하면 drag leave 됬다고 판정.
       },
       ondrop: function(event) {
-        var text = event.relatedTarget.textContent
-        for (var i in movingTexts) 
-        {
-          console.log(movingTexts[i]);
-          try {
-            mText = movingTexts[i].body.innerHTML;
-          } catch (ex) {
-            mText = "";
-            console.log(ex);
-          }
-
-          if (mText == text) {
-            console.log("delete")
-            movingTexts[i].dragIn = true;
-            break;
-          }
-        } // // movingTexts 의 내용이랑 target text내용이랑 비교해서 일치하면 on drop 됬다고 판정.
+        var originTarget = document.getElementById(event.relatedTarget.id);
+        originTarget.classList.remove('moving');
+        originTarget.style.left=$(window).innerWidth()/2+"px";
+        console.log(originTarget.style);
+        console.log('drag in!');
+        originTarget.dragIn = true;
       },
       ondropdeactivate: function(event) {
 
@@ -188,18 +242,20 @@
 
     //양음으로 랜덤한 속도를 생성하는 함수
     function randomSpeed(maxSpeed) {
-      return Math.random();
+      return Math.random()*maxSpeed;
     }
 
-    var canvasWidth = $(window).width();
-    var canvasHeight = window.innerHeight;
+    var canvasWidth = $('#container').innerWidth();
+    var canvasHeight = $('#container').innerHeight();
     var collect = "";
 
-    function MovingText(text) {
+    function MovingText(i, text) {
+      console.log(canvasHeight,canvasWidth);
       this.x = nextRandomInteger(canvasWidth);
       this.y = nextRandomInteger(canvasHeight);
-      this.vX = randomSpeed(10);
-      this.vY = randomSpeed(10);
+      console.log(this.x, this.y);
+      this.vX = randomSpeed(2.0);
+      this.vY = randomSpeed(2.0);
 
       this.rate = 10;
       this.elmH = Math.floor(Math.random() * 360) + 1; // Hue
@@ -208,85 +264,87 @@
 
       this.dragIn = false
 
-      this.body = document.createElement('p');
+      this.body = document.createElement('div');
+      promise = document.createElement('p');
+      promise.setAttribute('class', 'promise_text')
+      promise.innerHTML = text;
+      img = document.createElement('img');
+      img.setAttribute("class", "food");
+      var random = getRandom();
+      img.src = 'img/select/material/' + i + '.png'
 
+      this.body.innerHTML = img.outerHTML;
+      this.body.innerHTML += promise.outerHTML;
       this.body.style.fontSize = "35px";
       this.body.style.fontWeight = 'bold';
-      this.body.style.fontFamily = "Neo";
-      this.body.innerHTML = text;
+      this.body.style.fontFamily = "YoonGothic";
+      //this.body.innerHTML += text;
       this.body.style.position = 'absolute';
-      this.body.setAttribute("class", "draggable drag-drop");
-	  this.body.setAttribute("id", "MovingText_"+id);
-	  id += 1;
+      this.body.setAttribute("class", "draggable drag-drop moving");
+      this.body.setAttribute("id", "MovingText_" + id);
+      id += 1;
+
+      this.grap = false;
 
 
       //문서 객체를 document.body에 추가
-      document.body.appendChild(this.body);
+
+      document.getElementById("container").appendChild(this.body);
     }
 
     MovingText.prototype.move = function() {
-
       //범위 검사
       if (this.x < 0 || this.x > canvasWidth) {
         this.vX *= -1;
+        //console.log('Over width')
       }
       if (this.x > canvasWidth && this.vX > 0) {
         this.vX *= -1;
+        console.log('what the width');
       }
       if (this.y < 0 || this.y > canvasHeight) {
         this.vY *= -1;
+        //console.log('height over');
       }
-      if (this.y > canvasHeight & this.vY > 0) {
+      if (this.y > canvasHeight && this.vY > 0) {
         this.vY *= -1;
+        console.log('What the Weight');
       }
       //이동
       this.x += this.vX;
       this.y += this.vY;
-
+      //console.log(this.vX, this.vY);
       //화면에 이동 표시
       this.body.style.left = this.x + 'px';
       this.body.style.top = this.y + 'px';
+      //console.log(this.body.style.top.length);
     }
 
     window.onload = function() {
-      var texts = ["p1", "p11", "p2", "p3", "p4", "p5", "p6"];
-      //배열에 MovingText 객체 생성
-      for (var i in texts) 
-      {
-        movingTexts[i] = new MovingText(texts[i]);
-        
-      }
-        
-      setInterval(function() {
-        canvasWidth = window.innerWidth - 45;
-        canvasHeight = window.innerHeight - 91;
-      }, 500); // end setInterval
+        var texts = ['공약곤냥공냑 공양', '공약곤냥공냑공양', '공약곤냥공냑공양', '공약 곤냥공냑공양', '공약곤냥공냑 공양', '공약곤냥공냑 공양', '공약곤냥공냑공양', '공약 곤냥공냑공양', '공약곤냥공냑 공양', '공약곤냥공냑공양', '공약곤냥공냑공양', '공약곤냥공냑공양', '공약곤냥공 냑공양', '공약곤냥공냑공양', '공약곤냥공냑공양', '공약곤냥공냑공양', '공약곤냥공냑 공양', '공약곤냥공냑공양', '공약곤냥공냑공양', '공약곤냥공냑공양'];
+        //var texts = ["빌:공약", "선린 챔스"];
+        //배열에 MovingText 객체 생성
+        for (var i in texts) {
+          movingTexts[i] = new MovingText(i, texts[i]);
 
-      setInterval(function() {
-        for (var i in movingTexts) 
-        {
-          if (movingTexts[i].dragIn == false && movingTexts[i].body.classList[2] != 'tap') 
-          {
-            movingTexts[i].move();
-          }
         }
-      }, 20); // end setInterval
-    } // end window.onload
+
+        setInterval(function() {
+          canvasWidth = $('#container').innerWidth() - 45;
+          canvasHeight = $('#container').innerHeight();
+        }, 500); // end setInterval
+
+        setInterval(function() {
+          for (var i in movingTexts) {
+            console.log();
+            if (movingTexts[i].body.classList.contains('moving') == true && 
+              movingTexts[i].body.classList.contains('drop-activate') == false) {
+              movingTexts[i].move();
+            }
+          }
+        }, 20); // end setInterval
+      } // end window.onload
   </script>
-</head>
-
-<body>
-  <div class="draggable drag-drop" id="pp" style="font-size: 35px; font-weight: bold; font-family: Neo;">p121</div>
-
-  <div id="no-drop" class="draggable drag-drop"> #no-drop </div>
-
-  <div id="yes-drop" class="draggable drag-drop">
-    <p>#yes-drop</p>
-  </div>
-
-  <div id="outer-dropzone" class="dropzone">
-    #outer-dropzone
-  </div>
 </body>
 
 </html>
