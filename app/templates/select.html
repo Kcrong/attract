@@ -4,6 +4,7 @@
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
   <meta charset="UTF-8">
+  <meta name="viewport" content="height=1020">
   <script src="js/select/jquery.min.js"></script>
   <script src="js/select/random.js"></script>
   <script src="http://cdn.jsdelivr.net/interact.js/1.2.6/interact.min.js"></script>
@@ -11,42 +12,50 @@
 
   <!-- 보조 함수 -->
   <style>
-  @font-face{font-family:'YoonGothic'; src:url('../static/fonts/yoongodic.eot')}
-    body {
-      overflow: hidden;
+  @font-face{font-family:'YoonGothic'; src:url('fonts/yoongodic.eot')}
+    html {
+      overflow-y: visible;
       font-family: 'YoonGothic';
       background-image: url('img/select/bg.png');
       background-size: cover;
       background-repeat: no-repeat;
-      width:100%;
-      height: 80%;
+      height: 90%;
+      width: 90%;
+      html-height: 80%;
+    }
+    body {
+      height: 100%;
     }
 
     p {
       font-family: 
     }
+
     #cutting-board {
       //background-image: url('img/select/cutting-board.png');
       background-repeat: no-repeat;
-      height: 100px;
+      height: 200px;
       position: fixed;
       bottom: 5px;
-      //background-color: #ccc;
       border: dashed 4px transparent;
       border-radius: 4px;
-      margin-bottom: : -5000px;
-      padding: auto;
+      //margin-bottom: : -5000px;
+      padding: 1px;
       width: 99%;
       transition: background-color 0.3s; 
       z-index: 1;
     }
+    #cutting-board.drop-active{
+      border: dashed 4px #000;
+    }
 
     #container {
       border: dotted;
-      height: 500px;
+      height: 400px;
       width: 900px;
     }
     
+
     .drop-active {
       border-color: #aaa;
     }
@@ -109,8 +118,8 @@
 
 
 <body>
-  <div id="wrapper">
-  <div id="container"></div>
+<div id="wrapper">
+  <!--div id="container"></div-->
   <div id="cutting-board">
   </div>
 </div>
@@ -178,8 +187,9 @@
 
       // listen for drop related events:
       ondropactivate: function(event) {
-        var originTarget = document.getElementById(event.relatedTarget.id).parent;
-        event.target.classList.add('drop-active');
+        var originTarget = document.getElementById(event.relatedTarget.id);
+        originTarget.classList.add('drop-active');
+        document.getElementById('cutting-board').classList.add('drop-active');
         console.log('ondropactivate');
       },
       ondragenter: function(event) {
@@ -188,7 +198,7 @@
           dropzoneElement = event.target;
 
         var originTarget = document.getElementById(event.relatedTarget.id);
-        
+        originTarget.left = '1px';
         originTarget.classList.add('drag-in');
         console.log('ondragenter');
         dropzoneElement.classList.add('drop-target');
@@ -200,22 +210,26 @@
         var originTarget = document.getElementById(event.relatedTarget.id);
         draggableElement.classList.remove('can-drop');
         draggableElement.classList.remove('drag-in');
-        originTarget.classList.add('moving');
-        console.log('drag out!');
+        draggableElement.classList.add('moving');
+        console.log('drag leave!');
 
       },
       ondrop: function(event) {
+        console.log('on drop');
         var originTarget = document.getElementById(event.relatedTarget.id);
         originTarget.classList.remove('moving');
         originTarget.style.left=$(window).innerWidth()/2+"px";
         console.log(originTarget.style);
-        console.log('drag in!');
+        console.log('on drop');
         originTarget.dragIn = true;
       },
       ondropdeactivate: function(event) {
+        var originTarget = document.getElementById(event.relatedTarget.id);
 
         // remove active dropzone feedback
-        event.target.classList.remove('drop-active');
+        originTarget.classList.remove('drop-active');
+        originTarget.classList.remove('drop-target');
+        document.getElementById('cutting-board').classList.remove('drop-active');
         event.target.classList.remove('drop-target');
       }
     });
@@ -245,8 +259,11 @@
       return Math.random()*maxSpeed;
     }
 
-    var canvasWidth = $('#container').innerWidth();
-    var canvasHeight = $('#container').innerHeight();
+    /*var canvasWidth = $('#container').innerWidth();
+    var canvasHeight = $('#container').innerHeight();*/
+    var canvasWidth=$(window).innerWidth();
+    var canvasHeight=$(window).innerHeight();
+
     var collect = "";
 
     function MovingText(i, text) {
@@ -289,7 +306,8 @@
 
       //문서 객체를 document.body에 추가
 
-      document.getElementById("container").appendChild(this.body);
+      //document.getElementById("container").appendChild(this.body);
+      document.getElementsByTagName('body')[0].appendChild(this.body);
     }
 
     MovingText.prototype.move = function() {
@@ -303,8 +321,11 @@
         console.log('what the width');
       }
       if (this.y < 0 || this.y > canvasHeight) {
-        this.vY *= -1;
-        //console.log('height over');
+        if(!this.body.classList.contains('drop-active'))
+        {
+          this.vY *= -1;
+          console.log('height over');
+        }
       }
       if (this.y > canvasHeight && this.vY > 0) {
         this.vY *= -1;
@@ -321,8 +342,9 @@
     }
 
     window.onload = function() {
-        var texts = ['공약곤냥공냑 공양', '공약곤냥공냑공양', '공약곤냥공냑공양', '공약 곤냥공냑공양', '공약곤냥공냑 공양', '공약곤냥공냑 공양', '공약곤냥공냑공양', '공약 곤냥공냑공양', '공약곤냥공냑 공양', '공약곤냥공냑공양', '공약곤냥공냑공양', '공약곤냥공냑공양', '공약곤냥공 냑공양', '공약곤냥공냑공양', '공약곤냥공냑공양', '공약곤냥공냑공양', '공약곤냥공냑 공양', '공약곤냥공냑공양', '공약곤냥공냑공양', '공약곤냥공냑공양'];
+        //var texts = ['공약곤냥공냑 공양', '공약곤냥공냑공양', '공약곤냥공냑공양', '공약 곤냥공냑공양', '공약곤냥공냑 공양', '공약곤냥공냑 공양', '공약곤냥공냑공양', '공약 곤냥공냑공양', '공약곤냥공냑 공양', '공약곤냥공냑공양', '공약곤냥공냑공양', '공약곤냥공냑공양', '공약곤냥공 냑공양', '공약곤냥공냑공양', '공약곤냥공냑공양', '공약곤냥공냑공양', '공약곤냥공냑 공양', '공약곤냥공냑공양', '공약곤냥공냑공양', '공약곤냥공냑공양'];
         //var texts = ["빌:공약", "선린 챔스"];
+        var texts = ['선.디.전', '애플데이', '별빛이 내린다', '2 dream ','게임채널 e', '홍보가 기가막혀', 'guess ','고삼 Pictures', '구기대회', '급식의지니', '선린챔스', '대여해도 돼여?', '학생증 리뉴얼'];
         //배열에 MovingText 객체 생성
         for (var i in texts) {
           movingTexts[i] = new MovingText(i, texts[i]);
@@ -330,15 +352,17 @@
         }
 
         setInterval(function() {
-          canvasWidth = $('#container').innerWidth() - 45;
-          canvasHeight = $('#container').innerHeight();
+          /*canvasWidth = $('#container').innerWidth() - 45;
+          canvasHeight = $('#container').innerHeight();*/
+            canvasWidth=$('html').innerWidth()-100;
+            canvasHeight=$('html').innerHeight()-100;
         }, 500); // end setInterval
 
         setInterval(function() {
           for (var i in movingTexts) {
             console.log();
             if (movingTexts[i].body.classList.contains('moving') == true && 
-              movingTexts[i].body.classList.contains('drop-activate') == false) {
+              movingTexts[i].body.classList.contains('drop-active') == false) {
               movingTexts[i].move();
             }
           }
@@ -348,3 +372,4 @@
 </body>
 
 </html>
+
