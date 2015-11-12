@@ -17,7 +17,7 @@ html * {
 body {
   font-size: 100%;
   font-family: "Droid Serif", serif;
-  color: #7f8c97;
+  color: #7478b9;
   background-color: #e9f0f5;
 }
 
@@ -45,7 +45,7 @@ Modules - reusable parts of our design
   /* this class is used to give a max-width to the element it is applied to, and center it horizontally when it reaches that max-width */
   width: 90%;
   max-width: 1170px;
-  margin: 0 auto;
+  margin: 0px 20px 0px -25px;
 }
 .cd-container::after {
   /* clearfix */
@@ -83,7 +83,7 @@ header h1 {
 */
 #cd-timeline {
   position: relative;
-  padding: 2em 0;
+  padding: 0em 0;
   margin-top: 2em;
   margin-bottom: 2em;
 }
@@ -95,7 +95,7 @@ header h1 {
   left: 18px;
   height: 100%;
   width: 4px;
-  background: #d7e4ed;
+  background: white;
 }
 @media only screen and (min-width: 1170px) {
   #cd-timeline {
@@ -105,6 +105,7 @@ header h1 {
   #cd-timeline::before {
     left: 50%;
     margin-left: -2px;
+    margin-top: 10px;
   }
 }
 
@@ -115,7 +116,7 @@ header h1 {
 
 .cd-timeline-block-big {
   position: relative;
-  margin: 3em 1em 7em 1em;
+  margin: 0em 1em 7em 1em;
 }
 
 .cd-timeline-block:after {
@@ -148,7 +149,6 @@ header h1 {
   width: 40px;
   height: 40px;
   border-radius: 50%;
-  box-shadow: 0 0 0 4px white, inset 0 2px 0 rgba(0, 0, 0, 0.08), 0 3px 0 4px rgba(0, 0, 0, 0.05);
 }
 .cd-timeline-img img {
   display: block;
@@ -170,16 +170,16 @@ header h1 {
   background: #f0ca45;
 }
 .cd-timeline-img.cd-sinmyung {
-  background: red;
+  background: white;
 }
 .cd-timeline-img.cd-dodream {
-  background: green;
+  background: white;
 }
 
 .cd-timeline-img.cd-big {
     width: 100px;
     height: 100px;
-    margin-left: -50px;
+    margin-left: -59px;
     /* Force Hardware Acceleration in WebKit */
     -webkit-transform: translateZ(0);
     -webkit-backface-visibility: hidden;
@@ -187,10 +187,10 @@ header h1 {
 
 @media only screen and (min-width: 1170px) {
   .cd-timeline-img {
-    width: 60px;
-    height: 60px;
+    width: 30px;
+    height: 30px;
     left: 50%;
-    margin-left: -30px;
+    margin-left: -15px;
     /* Force Hardware Acceleration in WebKit */
     -webkit-transform: translateZ(0);
     -webkit-backface-visibility: hidden;
@@ -267,9 +267,9 @@ header h1 {
   position: relative;
   margin-left: 60px;
   background: white;
+  background: rgba(255,255,255,0.5);
   border-radius: 0.25em;
   padding: 1em;
-  box-shadow: 0 3px 0 #d7e4ed;
 }
 .cd-timeline-content:after {
   content: "";
@@ -293,7 +293,7 @@ header h1 {
 .cd-timeline-content .cd-read-more {
   float: right;
   padding: .8em 1em;
-  background: #acb7c0;
+  background: rgba(255,255,255,0.5);
   color: white;
   border-radius: 0.25em;
 }
@@ -312,8 +312,7 @@ header h1 {
   right: 100%;
   height: 0;
   width: 0;
-  border: 7px solid transparent;
-  border-right: 7px solid white;
+
 }
 @media only screen and (min-width: 768px) {
   .cd-timeline-content h2 {
@@ -360,7 +359,7 @@ header h1 {
     left: auto;
     right: 100%;
     border-color: transparent;
-    border-right-color: white;
+    border-right-color: rgba(255,255,255,0.5);
   }
   .cd-timeline-block:nth-child(even) .cd-timeline-content .cd-read-more {
     float: right;

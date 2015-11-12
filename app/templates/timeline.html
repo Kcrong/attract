@@ -123,7 +123,7 @@
 
 </head>
 
-<body>
+<body style="background: url('img/index/background.jpg') no-repeat center center fixed; --webkit-background-size: cover; -moz-background-size: cover; -o-background-size: cover; background-size: cover; font-family: 'Open Sans', sans-serif">
 <!--
     <header style="width: 100%; position: fixed; z-index: 100">
         <a href="/">
@@ -143,111 +143,147 @@
         {% endif %}
     </header>
     -->
-    <img src="img/timeline/"
-	<section id="cd-timeline" class="cd-container" style="margin-top: 0px">
-        <!-- for title -->
-        <div style="margin-top: 100px"></div>
-		<!-- finish -->
+    <div style="width: 100%; height: auto;">
+        <a href="/account/login"><div style="float: right; padding-top: 10px; padding-right: 20px">로그인</div></a>
+    </div>
+    <div style="width: 100%;height: auto">
+    <img src="img/timeline/timeline_logo.png" style="margin: 0 auto; display: block;">
+    </div>
+	<section id="cd-timeline" class="cd-container" style="margin-top: 0px; max-width: unset; width: unset">
 
 
-        {% for year in years %}
-            <div class="cd-timeline-block-big">
-            {% if promise_data[year|string][0]['promise_party'] == 2 %}
-                <div class="cd-timeline-img cd-dodream cd-big bounce-in" style="padding-top:42px;">
-            {% else %}
-                <div class="cd-timeline-img cd-sinmyung cd-big bounce-in" style="padding-top:42px;">
-            {% endif %}
-                    <h1 style="text-align: center; color: white">{{ year }}</h1>
+
+
+            <div style="margin: 0 auto;">
+                <div style="float: left; width: 10%; height: 100%; position: fixed; padding-left: 50px">
+                <ul style="list-style-type: unset;">
+                    {% for year in years %}
+                    <li style="list-style-type: unset; color: white"><a href="#{{ year }}"><span style="color: white">{{ year }}</span></a></li><br>
+                    {% endfor %}
+                </ul>
                 </div>
 
-                    <div class="cd-timeline-content" style="visibility: hidden">
-                </div>
-            </div>
-            {%  for data in promise_data[year|string] %}
+                <div style="float: left; width: 80%; height: 100%; padding-left: 20%">
 
-                <div class="cd-timeline-block">
-                {% if promise_data[year|string][0]['promise_party'] == 2 %}
-                    <div class="cd-timeline-img cd-dodream bounce-in">
-                {% else %}
-                    <div class="cd-timeline-img cd-sinmyung bounce-in">
-                {% endif %}
-
-                        <img src="img/timeline/cd-icon-picture.svg" alt="Picture">
-                    </div>
-
-                    <div class="cd-timeline-content">
-                        {% if data['promise_percent'] == 100 %}
-                        <h2 style="color: brown">{{ data['promise_title'] }} - Complete</h2>
+                    {% for year in years %}
+                        <a name="{{ year }}"><div class="cd-timeline-block-big" style="border-top: 10px"></a>
+                        {% if promise_data[year|string][0]['promise_party'] == 2 %}
+                            <!-- dodream -->
+                            <div class="cd-timeline-img cd-big bounce-in" style="padding-top:35px; background: url('img/timeline/party_circle_big.png') center center; width: 120px; height: 90px;background-size: cover; font-size: larger">
+                            <h1 style="text-align: center; color: #7478b9; font-family: 'Open Sans', sans-serif; font-weight: bold">두드림</h1>
                         {% else %}
-                        <h2>{{ data['promise_title'] }}</h2>
+                            <!-- sinmyung -->
+                            <div class="cd-timeline-img cd-big bounce-in" style="padding-top:35px; background: url('img/timeline/party_circle_big.png') center center; width: 120px; height: 90px;background-size: cover; font-size: larger">
+                            <h1 style="text-align: center; color: #7478b9; font-family: 'Open Sans', sans-serif; font-weight: bold">신명</h1>
                         {% endif %}
+                            </div>
+
+                                <div class="cd-timeline-content" style="visibility: hidden">
+                            </div>
+                        </div>
+                        {%  for data in promise_data[year|string] %}
+
+                            <div class="cd-timeline-block">
+                            {% if promise_data[year|string][0]['promise_party'] == 2 %}
+                                <div class="cd-timeline-img cd-dodream bounce-in" style="background-image: url('img/timeline/party_circle_big.png')">
+                            {% else %}
+                                <div class="cd-timeline-img cd-sinmyung bounce-in">
+                            {% endif %}
+
+                                    <!--<img src="img/timeline/party_circle_big.png" alt="Picture">-->
+                                </div>
+
+                                <div class="cd-timeline-content">
+                                <span style="color: #7478b9; font-weight: bold">{{ data['promise_date'].year }}년 {{ data['promise_date'].month }}월 {{ data['promise_date'].day }}일</span>
+                                    <div style="width: 100%">
+                                        <div style="float: right">
+                                        <img src="img/timeline/like_icon.png" width="40px"> <span style="color: #7478b9; font-weight: bold">{{ data['promise_likes'] }}</span>
+                                        </div>
+                                    </div>
+                                <br>
+                                    <h1 style="color: #7478b9; font-size: 50px; font-weight: normal">{{ data['promise_title'] }}</h1>
 
 
-                        <!--<progress value="{{ data['promise_percent'] }}" max="100"></progress> -->
-                    <div class="progress">
-      <div class="determinate" style="width: {{ data['promise_percent'] }}%"></div>
-  </div>
 
-                        <!-- <a id="controlButton" href="#" class="progress-button">Start</a> -->
+                                    <!--<progress value="{{ data['promise_percent'] }}" max="100"></progress> -->
+                                    <div class="progress" style="background-color: white; border: unset; border-radius: 10px" >
+                                        <div class="determinate" style="width: {{ data['promise_percent'] }}%; background-color: #7478b9;
+                                                border-radius: 10px;
+                                                border: 2px solid;
+                                                text-align: center"><span style="color: white; font-weight: lighter">{{ data['promise_percent'] }}%</span></div>
+                                    </div>
+
+                                    <!-- <a id="controlButton" href="#" class="progress-button">Start</a> -->
 
 
-                        {{ data['promise_percent'] }}%
-                        <p>{{ data['promise_info'] }}</p>
 
-                    {% if username == 'dodream' or username == 'sinmyung' %}
-                        <a href="/account/setting?promise={{ data['promise_title'] }}" class="cd=read-more" style="float: left;">Edit</a>
-                    {% endif %}
-                        <a href="#{{ data['promise_title'] }}" class="cd-read-more modal-trigger" style="float: right;">Read more</a>
+                                    <p><span style="color: #7478b9; font-weight: bold; font-family: 'Open Sans', sans-serif">{{ data['promise_info'] }}</span></p>
 
-                        <span class="cd-date">{{ data['promise_date'] }}</span>
-                    </div>
+                                {% if username == 'dodream' or username == 'sinmyung' %}
+                                    <a href="/account/setting?promise={{ data['promise_title'] }}" class="cd=read-more" style="float: left;">Edit</a>
+                                {% endif %}
+                                    <a href="#{{ data['promise_title'] }}" class="cd-read-more modal-trigger" style="float: right; color: #7478b9; font-weight: bold">Read more</a>
+
+                                   <!-- <span class="cd-date">{{ data['promise_date'] }}</span> -->
+                                </div>
+                            </div>
+
+                            <div id="{{ data['promise_title'] }}" class="modal modal-fixed-footer">
+                                <div class="modal-content">
+                                    <div class="slider">
+                                        <ul class="slides">
+                                            <li>
+                                            <img src="http://lorempixel.com/580/250/nature/2"> <!-- random image -->
+                                                <div class="caption left-align">
+                                                    <h3>{{ data['promise_title'] }}</h3>
+                                                    <h5 class="light grey-text text-lighten-3">{{ data['promise_info'] }}</h5>
+                                                </div>
+                                            </li>
+                                            <li>
+                                                <img src="http://lorempixel.com/580/250/nature/2"> <!-- random image -->
+                                                <div class="caption left-align">
+                                                    <h3>{{ data['promise_title'] }}</h3>
+                                                    <h5 class="light grey-text text-lighten-3">{{ data['promise_info'] }}</h5>
+                                                </div>
+                                            </li>
+                                            <li>
+                                                <img src="http://lorempixel.com/580/250/nature/3"> <!-- random image -->
+                                                <div class="caption right-align">
+                                                    <h3>{{ data['promise_title'] }}</h3>
+                                                    <h5 class="light grey-text text-lighten-3">{{ data['promise_info'] }}</h5>
+                                                </div>
+                                            </li>
+                                            <li>
+                                                <img src="http://lorempixel.com/580/250/nature/4"> <!-- random image -->
+                                                <div class="caption center-align">
+                                                    <h3>{{ data['promise_title'] }}</h3>
+                                                    <h5 class="light grey-text text-lighten-3">{{ data['promise_info'] }}</h5>
+                                                </div>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div> <!-- end of modal-content -->
+                                <div class="modal-footer">
+                                <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat ">Agree</a>
+                                </div> <!-- end of modal-footer -->
+                            </div> <!-- fixed by ner0, modal-fixed-footer  -->
+
+                        {%  endfor  %}
+
+                    {% endfor %}
+
                 </div>
 
-                <div id="{{ data['promise_title'] }}" class="modal modal-fixed-footer">
-                    <div class="modal-content">
-                        <div class="slider">
-                            <ul class="slides">
-                                <li>
-                                <img src="http://lorempixel.com/580/250/nature/2"> <!-- random image -->
-                                    <div class="caption left-align">
-                                        <h3>{{ data['promise_title'] }}</h3>
-                                        <h5 class="light grey-text text-lighten-3">{{ data['promise_info'] }}</h5>
-                                    </div>
-                                </li>
-                                <li>
-                                    <img src="http://lorempixel.com/580/250/nature/2"> <!-- random image -->
-                                    <div class="caption left-align">
-                                        <h3>{{ data['promise_title'] }}</h3>
-                                        <h5 class="light grey-text text-lighten-3">{{ data['promise_info'] }}</h5>
-                                    </div>
-                                </li>
-                                <li>
-                                    <img src="http://lorempixel.com/580/250/nature/3"> <!-- random image -->
-                                    <div class="caption right-align">
-                                        <h3>{{ data['promise_title'] }}</h3>
-                                        <h5 class="light grey-text text-lighten-3">{{ data['promise_info'] }}</h5>
-                                    </div>
-                                </li>
-                                <li>
-                                    <img src="http://lorempixel.com/580/250/nature/4"> <!-- random image -->
-                                    <div class="caption center-align">
-                                        <h3>{{ data['promise_title'] }}</h3>
-                                        <h5 class="light grey-text text-lighten-3">{{ data['promise_info'] }}</h5>
-                                    </div>
-                                </li>
-                            </ul>
-                        </div>
-                    </div> <!-- end of modal-content -->
-                    <div class="modal-footer">
-                    <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat ">Agree</a>
-                    </div> <!-- end of modal-footer -->
-                </div> <!-- fixed by ner0, modal-fixed-footer  -->
+            </div>
 
-            {%  endfor  %}
-        {% endfor %}
 
 
 	</section> <!-- cd-timeline -->
+
+
+
+
+
     <script>
      $(document).ready(function() {
          jQuery.noConflict();
@@ -263,8 +299,8 @@
 	// actual buttons with progress meters.
 	// You need to call this function once the page is loaded.
 	// If you add buttons later, you will need to call the function only for them.
-
-	$('.progress-button').progressInitialize();
+    // i edit here bookmark
+	//$('.progress-button').progressInitialize();
 
 	// Listen for clicks on the first three buttons, and start
 	// the progress animations

@@ -131,7 +131,8 @@ def timeline():
                    'promise_info': promise.details,
                    'promise_date': promise.date,
                    'promise_party': promise.party,
-                   'promise_percent': promise.percentage}
+                   'promise_percent': promise.percentage,
+                   'promise_likes': db.session.query(Likes).filter_by(promise=promise.id).count()}
             promises.append(tmp)
 
         all_promises[str(year)] = promises
@@ -210,6 +211,54 @@ def dummy_db_data():
     db.session.commit()
     """
 
+    """
+    # add promise like data
+    like = Likes(1, True, '0.0.0.1')
+    db.session.add(like)
+    like = Likes(2, True, '0.0.0.2')
+    db.session.add(like)
+    like = Likes(3, True, '0.0.0.3')
+    db.session.add(like)
+    like = Likes(4, True, '0.0.0.4')
+    db.session.add(like)
+    like = Likes(5, True, '0.0.0.5')
+    db.session.add(like)
+    like = Likes(6, True, '0.0.0.6')
+    db.session.add(like)
+    like = Likes(7, True, '0.0.0.7')
+    db.session.add(like)
+    like = Likes(8, True, '0.0.0.8')
+    db.session.add(like)
+    like = Likes(9, True, '0.0.0.9')
+    db.session.add(like)
+    like = Likes(10, True, '0.0.1.1')
+    db.session.add(like)
+    like = Likes(11, True, '0.0.2.1')
+    db.session.add(like)
+    like = Likes(12, True, '0.0.3.1')
+    db.session.add(like)
+    like = Likes(13, True, '0.0.4.1')
+    db.session.add(like)
+    like = Likes(14, True, '0.0.5.1')
+    db.session.add(like)
+    like = Likes(15, True, '0.0.6.1')
+    db.session.add(like)
+    like = Likes(16, True, '0.0.7.1')
+    db.session.add(like)
+    like = Likes(17, True, '0.0.8.1')
+    db.session.add(like)
+    like = Likes(18, True, '0.0.9.1')
+    db.session.add(like)
+    like = Likes(19, True, '0.1.0.1')
+    db.session.add(like)
+    like = Likes(20, True, '0.2.0.1')
+    db.session.add(like)
+    like = Likes(21, True, '0.3.0.1')
+    db.session.add(like)
+    like = Likes(22, True, '0.4.0.1')
+    db.session.add(like)
+    db.session.commit()
+    """
     return "Success"
 
 

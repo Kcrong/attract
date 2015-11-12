@@ -31,7 +31,7 @@ class Likes(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     promise = db.Column(db.Integer, db.ForeignKey('promise.id'))
     like = db.Column(db.BOOLEAN)
-    ip = db.Column(db.String(16))
+    ip = db.Column(db.String(16), unique=True)
 
     def __init__(self, promise, like, ip):
         self.promise = promise
