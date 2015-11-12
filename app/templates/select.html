@@ -4,6 +4,7 @@
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
   <meta charset="UTF-8">
+  <meta name="viewport" content="height=1020">
   <script src="../static/js/select/jquery.min.js"></script>
   <script src="../static/js/random.js"></script>
   <script src="http://cdn.jsdelivr.net/interact.js/1.2.6/interact.min.js"></script>
@@ -12,41 +13,31 @@
   <!-- 보조 함수 -->
   <style>
   @font-face{font-family:'YoonGothic'; src:url('../static/fonts/yoongodic.eot')}
-    body {
+    html {
       overflow: hidden;
       font-family: 'YoonGothic';
-      background-image: url('C:\\Users\\ner0\\Desktop\\Archive\\bg.png');
+      background-image: url('../static/images/attract/background.png');
       background-size: cover;
       background-repeat: no-repeat;
-      width:100%;
-      height: 80%;
+      height: 100%;
+      width: 100%;
+      html-height: 100%;
+    }
+    body {
+      height: 100%;
     }
 
-    p {
-      font-family: 
-    }
-    #cutting-board {
-      //background-image: url('../static/images/asdf/cutting-board.png');
-      background-repeat: no-repeat;
-      height: 100px;
-      position: fixed;
-      bottom: 5px;
-      //background-color: #ccc;
-      border: dashed 4px transparent;
-      border-radius: 4px;
-      margin-bottom: : -5000px;
-      padding: auto;
-      width: 99%;
-      transition: background-color 0.3s; 
-      z-index: 1;
+    #wrapper {
+      height: 65%;
     }
 
     #container {
       border: dotted;
-      height: 500px;
+      height: 400px;
       width: 900px;
     }
     
+
     .drop-active {
       border-color: #aaa;
     }
@@ -57,12 +48,6 @@
       border-style: solid;
     }
     
-    .draggable {
-      height: 100px;
-      width: 100px;
-      z-index: 5;
-      overflow-x: visible;
-    }
 
     .drag-in {
       //padding: center;
@@ -86,39 +71,73 @@
       //background-color: #4e4;
     }
 
-    .food {
+    .cloud {
       position: absolute;
-      height: 100px;
-      width: 100px;
+      height: 220px;
+      width: 260px;
       left: 0;
-      top: 0
+      top: 0;
+      overflow-x: visible;
+      z-index: 2;
     }
 
     .promise_text {
-      background-color: rgba( 0, 0, 0, 0.5 );
       z-index: 100;
       position: absolute;
-      color: white;
+      margin-left: 50;
+      left: 50%;
       font-size: 20px;
-      word-break: break-all;
+      color: #000;
+      width:200px; left:0; right:0; 
+      padding-left: 100px;
+      padding-top: 75px;
       //font-weight: bold;
     }
+
+    #bottom {
+      background-repeat: no-repeat;
+      height: 200px;
+      border: dashed 4px transparent;
+      border-radius: 4px;
+      width: 99%;
+      margin-bottom: 10000px;
+      transition: background-color 0.3s; 
+      z-index: 1;
+      
+      display: flex;
+    }
+
+    .sheep {
+      background-image: url('../static/images/attract/sheep_nofur.png');
+      background-size: cover;
+      background-repeat: no-repeat;
+      margin:30px;
+      height: 200px;
+      width: 250px;
+      border: 1px solid;
+      justify-content: space-between; 
+      display: inline-block;
+    }
+
+     .sheep.drop-active {
+      border: dashed 4px #000;
+    }
+
   </style>
 
 </head>
 
 
 <body>
-  <div id="wrapper">
-  <div id="container"></div>
-  <div id="cutting-board">
-  </div>
+<div id="wrapper">
+  <!--div id="container"></div-->
+
 </div>
 
     <script>
     var movingTexts = {};
     var id = 0;
-    interact('.draggable')
+    interact('.cloud')
       .draggable({
         // enable inertial throwing
         inertia: true,
@@ -169,7 +188,7 @@
     // this is used later in the resizing demo
     window.dragMoveListener = dragMoveListener;
 
-    interact('#cutting-board').dropzone({
+    interact('.sheep').dropzone({
       // only accept elements matching this CSS selector
       //accept: '#yes-drop',
 
@@ -178,8 +197,9 @@
 
       // listen for drop related events:
       ondropactivate: function(event) {
-        var originTarget = document.getElementById(event.relatedTarget.id).parent;
-        event.target.classList.add('drop-active');
+        var originTarget = document.getElementById(event.relatedTarget.id);
+        originTarget.classList.add('drop-active');
+        //document.getElementById('cutting-board').classList.add('drop-active');
         console.log('ondropactivate');
       },
       ondragenter: function(event) {
@@ -188,7 +208,7 @@
           dropzoneElement = event.target;
 
         var originTarget = document.getElementById(event.relatedTarget.id);
-        
+        originTarget.left = '1px';
         originTarget.classList.add('drag-in');
         console.log('ondragenter');
         dropzoneElement.classList.add('drop-target');
@@ -200,22 +220,25 @@
         var originTarget = document.getElementById(event.relatedTarget.id);
         draggableElement.classList.remove('can-drop');
         draggableElement.classList.remove('drag-in');
-        originTarget.classList.add('moving');
-        console.log('drag out!');
+        draggableElement.classList.add('moving');
+        console.log('drag leave!');
 
       },
       ondrop: function(event) {
+        console.log('on drop');
         var originTarget = document.getElementById(event.relatedTarget.id);
         originTarget.classList.remove('moving');
-        originTarget.style.left=$(window).innerWidth()/2+"px";
         console.log(originTarget.style);
-        console.log('drag in!');
+        console.log('on drop');
         originTarget.dragIn = true;
       },
       ondropdeactivate: function(event) {
+        var originTarget = document.getElementById(event.relatedTarget.id);
 
         // remove active dropzone feedback
-        event.target.classList.remove('drop-active');
+        originTarget.classList.remove('drop-active');
+        originTarget.classList.remove('drop-target');
+        //document.getElementById('cutting-board').classList.remove('drop-active');
         event.target.classList.remove('drop-target');
       }
     });
@@ -245,8 +268,11 @@
       return Math.random()*maxSpeed;
     }
 
-    var canvasWidth = $('#container').innerWidth();
-    var canvasHeight = $('#container').innerHeight();
+    /*var canvasWidth = $('#container').innerWidth();
+    var canvasHeight = $('#container').innerHeight();*/
+    var canvasWidth=$(window).innerWidth();
+    var canvasHeight=$(window).innerHeight();
+
     var collect = "";
 
     function MovingText(i, text) {
@@ -268,19 +294,17 @@
       promise = document.createElement('p');
       promise.setAttribute('class', 'promise_text')
       promise.innerHTML = text;
-      img = document.createElement('img');
-      img.setAttribute("class", "food");
       var random = getRandom();
-      img.src = '../static/images/asdf/material/' + i + '.png'
-
-      this.body.innerHTML = img.outerHTML;
+      
+      this.body.style.backgroundImage = "url('../static/images/attract/cloud_s.png')";
+      this.body.style.backgroundSize = "cover";
       this.body.innerHTML += promise.outerHTML;
       this.body.style.fontSize = "35px";
       this.body.style.fontWeight = 'bold';
       this.body.style.fontFamily = "YoonGothic";
       //this.body.innerHTML += text;
       this.body.style.position = 'absolute';
-      this.body.setAttribute("class", "draggable drag-drop moving");
+      this.body.setAttribute("class", "cloud drag-drop moving");
       this.body.setAttribute("id", "MovingText_" + id);
       id += 1;
 
@@ -289,7 +313,8 @@
 
       //문서 객체를 document.body에 추가
 
-      document.getElementById("container").appendChild(this.body);
+      //document.getElementById("container").appendChild(this.body);
+      document.getElementsByTagName('body')[0].insertBefore(this.body, document.getElementById("bottom"));
     }
 
     MovingText.prototype.move = function() {
@@ -303,8 +328,11 @@
         console.log('what the width');
       }
       if (this.y < 0 || this.y > canvasHeight) {
-        this.vY *= -1;
-        //console.log('height over');
+        if(!this.body.classList.contains('drop-active'))
+        {
+          this.vY *= -1;
+          console.log('height over');
+        }
       }
       if (this.y > canvasHeight && this.vY > 0) {
         this.vY *= -1;
@@ -321,8 +349,9 @@
     }
 
     window.onload = function() {
-        var texts = ['공약곤냥공냑 공양', '공약곤냥공냑공양', '공약곤냥공냑공양', '공약 곤냥공냑공양', '공약곤냥공냑 공양', '공약곤냥공냑 공양', '공약곤냥공냑공양', '공약 곤냥공냑공양', '공약곤냥공냑 공양', '공약곤냥공냑공양', '공약곤냥공냑공양', '공약곤냥공냑공양', '공약곤냥공 냑공양', '공약곤냥공냑공양', '공약곤냥공냑공양', '공약곤냥공냑공양', '공약곤냥공냑 공양', '공약곤냥공냑공양', '공약곤냥공냑공양', '공약곤냥공냑공양'];
+        //var texts = ['공약곤냥공냑 공양', '공약곤냥공냑공양', '공약곤냥공냑공양', '공약 곤냥공냑공양', '공약곤냥공냑 공양', '공약곤냥공냑 공양', '공약곤냥공냑공양', '공약 곤냥공냑공양', '공약곤냥공냑 공양', '공약곤냥공냑공양', '공약곤냥공냑공양', '공약곤냥공냑공양', '공약곤냥공 냑공양', '공약곤냥공냑공양', '공약곤냥공냑공양', '공약곤냥공냑공양', '공약곤냥공냑 공양', '공약곤냥공냑공양', '공약곤냥공냑공양', '공약곤냥공냑공양'];
         //var texts = ["빌:공약", "선린 챔스"];
+        var texts = ['선.디.전', '애플데이', '별빛이 내린다', '2 dream ','게임채널 e', '홍보가 기가막혀', 'guess ','고삼 Pictures', '구기대회', '급식의지니', '선린챔스', '대여해도 돼여?', '학생증 리뉴얼'];
         //배열에 MovingText 객체 생성
         for (var i in texts) {
           movingTexts[i] = new MovingText(i, texts[i]);
@@ -330,21 +359,31 @@
         }
 
         setInterval(function() {
-          canvasWidth = $('#container').innerWidth() - 45;
-          canvasHeight = $('#container').innerHeight();
+          /*canvasWidth = $('#container').innerWidth() - 45;
+          canvasHeight = $('#container').innerHeight();*/
+            canvasWidth=$('#wrapper').innerWidth()-100;
+            canvasHeight=$('#wrapper').innerHeight()-100;
         }, 500); // end setInterval
 
         setInterval(function() {
           for (var i in movingTexts) {
             console.log();
             if (movingTexts[i].body.classList.contains('moving') == true && 
-              movingTexts[i].body.classList.contains('drop-activate') == false) {
+              movingTexts[i].body.classList.contains('drop-active') == false) {
               movingTexts[i].move();
             }
           }
         }, 20); // end setInterval
+
       } // end window.onload
   </script>
+  <ul id="bottom">
+    <li class="sheep"></li>
+    <li class="sheep"></li>
+    <li class="sheep"></li>
+    <li class="sheep"></li>
+    <li class="sheep"></li>
+  </ul>
 </body>
 
 </html>
