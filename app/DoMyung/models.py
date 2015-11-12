@@ -47,8 +47,9 @@ class Checklist(db.Model):
     info = db.Column(db.String(300))
     title = db.Column(db.String(300))
 
-    def __init__(self, page, picture, info, title):
+    def __init__(self, page, picture, info, title, promise):
         self.page = page
         self.picture = picture
         self.info = info
         self.title = title
+        self.promise = promise

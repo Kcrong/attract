@@ -1,13 +1,25 @@
+# -*-coding: utf-8 -*-
 from models import Party
 from models import Promise
 from models import Likes
-from flask import request, render_template, send_from_directory
+from models import Checklist
+from flask import request, render_template, send_from_directory, session, redirect
 import json
 from . import domyung_bp
 from sqlalchemy import extract
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.sql import func
 from .. import db
+import os
+import random
+import string
+
+
+def randomkey(length):
+    return ''.join(random.choice(string.lowercase) for i in range(length))
+
+
+domyung_bp.static_folder = os.path.join(domyung_bp.root_path, '../static/')
 
 
 @domyung_bp.route('/add', methods=['POST'])
@@ -49,6 +61,16 @@ def show_promise():
     return json.dumps(data)
 
 
+@domyung_bp.route('/select')
+def select():
+    return render_template('select.html')
+
+
+@domyung_bp.route('/result')
+def select_result():
+    return render_template('complete_select.html')
+
+
 @domyung_bp.route('/like_promise', methods=['POST'])
 def like_promise():
     data = request.form
@@ -70,8 +92,31 @@ def edit_percentage():
     return "Success"
 
 
+@domyung_bp.route('/add_checklist', methods=['POST'])
+def add_checklist():
+    data = request.form
+    page = data['page']
+    title = data['detail_title']
+    description = data['description']
+    promise = data['promise']
+    image = request.files['image']
+    filename = randomkey(len(image.filename)) + '.' + image.filename.rsplit('.', 1)[1]
+    path = '../static/images/checklist/' + filename
+    path = os.path.join(domyung_bp.root_path, path)
+
+    image.save(path)
+    promise_obj = db.session.query(Promise).filter_by(title=promise).first()
+    db.session.add(Checklist(page, filename, description, title, promise_obj.id))
+    db.session.commit()
+    return redirect('/account/setting?promise=' + promise)
+
+
 @domyung_bp.route('/timeline')
 def timeline():
+    try:
+        username = session['username']
+    except KeyError:
+        username = 'Anonymous'
     date_range = db.session.query(func.min(Promise.date).label("min_year"),
                                   func.max(Promise.date).label("max_year")).one()
     years = range(date_range[0].year, date_range[1].year + 1)
@@ -93,7 +138,8 @@ def timeline():
 
     return render_template('timeline.html',
                            promise_data=all_promises,
-                           years=years)
+                           years=years,
+                           username=username)
 
 
 # for send static files
@@ -111,3 +157,26 @@ def js_static(filename):
 @domyung_bp.route('/img/<path:filename>')
 def img_static(filename):
     return send_from_directory(domyung_bp.root_path + '/../static/images/', filename)
+
+
+"""
+#@domyung_bp.route('/add_db_info')
+def asdf():
+    sinmyung = db.session.query(Party).filter_by(id=1).first()
+    dodream = db.session.query(Party).filter_by(id=2).first()
+
+    db.session.add(Promise('빌:공약', '여러분이 원하는 공약을 들어드립니다.', sinmyung.id, '20150101'))
+    db.session.add(Promise('선린뉴스', '한달에 한 번 선린뉴스로 소식을 전하겠습니다.', sinmyung.id, '20150201'))
+    db.session.add(Promise('급식의지니', '여러분이 먹고싶은 급식을 먹을 수 있도록 투표를 진행', sinmyung.id, '20150301'))
+    db.session.add(Promise('모두의축제', '복면가왕 등 새로워진 축제개선', sinmyung.id, '20150401'))
+    db.session.add(Promise('선림픽', '장애물 달리기, 여자종목 추가 등 새로워진 체육대회', sinmyung.id, '20150501'))
+    db.session.add(Promise('선린챔스', '리그방식으로 진행되는 선린풋살대회', sinmyung.id, '20150601'))
+    db.session.add(Promise('E-Sports', '매년 진행해온 E-Sports', sinmyung.id, '20150701'))
+    db.session.add(Promise('대여해도 돼여?', '공, 석식, 우산, 충전기를 대여해드립니다.', sinmyung.id, '20150801'))
+    db.session.add(Promise('학생증 리뉴얼', '학생증 공모전을 통해 새롭게 바뀔 학생증!', sinmyung.id, '20150901'))
+    db.session.add(Promise('프린터를 부탁해', '고장나서 느리고 불편했던 프린터기를 추가/삭제', sinmyung.id, '20151001'))
+    db.session.add(Promise('허니버터고3', '학업에 지친 선배들을 위한 작은 이벤트', sinmyung.id, '20151101'))
+
+    db.session.commit()
+    return "AsdF"
+"""

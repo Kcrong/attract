@@ -12,12 +12,17 @@ def index():
 
 @sunrin_app_blueprint.route('/select')
 def go_select():
-    return render_template('select.html')
+    return redirect('/domyung/select')
 
 
 @sunrin_app_blueprint.route('/timeline')
 def go_timeline():
     return redirect('/domyung/timeline')
+
+
+@sunrin_app_blueprint.route('/admin')
+def promise_list():
+    return redirect('/domyung/setting')
 
 
 # for send static files

@@ -5,6 +5,7 @@ from flask.ext.sqlalchemy import SQLAlchemy
 from flask.ext.script import Manager, Server
 from flask.ext.migrate import Migrate, MigrateCommand
 
+
 tmpl_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'templates')
 
 app = Flask(__name__, template_folder=tmpl_dir)
@@ -24,8 +25,7 @@ def create_app():
 
 
 app = create_app()
-db = SQLAlchemy(app)
-db.init_app(app)
+db = SQLAlchemy(app).init_app(app)
 
 import DoMyung.models
 import account.models
