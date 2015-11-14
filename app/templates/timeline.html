@@ -124,7 +124,7 @@
 </head>
 
 <body style="background: url('img/index/background.jpg') no-repeat center center fixed; --webkit-background-size: cover; -moz-background-size: cover; -o-background-size: cover; background-size: cover; font-family: 'Open Sans', sans-serif">
-<!--
+<!--http://flask.pocoo.org/snippets/59/
     <header style="width: 100%; position: fixed; z-index: 100">
         <a href="/">
             <div id="left">
@@ -144,7 +144,11 @@
     </header>
     -->
     <div style="width: 100%; height: auto;">
-        <a href="/account/login"><div style="float: right; padding-top: 10px; padding-right: 20px">로그인</div></a>
+            {% if username == 'dodream' or username == 'sinmyung' %}
+            <a href="/account/logout"><div style="float: right; padding-top: 10px; padding-right: 20px">로그아웃</div></a>
+            {% else %}
+            <a href="/account/login"><div style="float: right; padding-top: 10px; padding-right: 20px">로그인</div></a>
+            {% endif %}
     </div>
     <div style="width: 100%;height: auto">
     <img src="img/timeline/timeline_logo.png" style="margin: 0 auto; display: block;">
@@ -195,11 +199,11 @@
 
                                 <div class="cd-timeline-content">
                                 <span style="color: #7478b9; font-weight: bold">{{ data['promise_date'].year }}년 {{ data['promise_date'].month }}월 {{ data['promise_date'].day }}일</span>
-                                    <div style="width: 100%">
+                                    <a href="add_like?title={{ data['promise_title'] }}"><div style="width: 100%">
                                         <div style="float: right">
                                         <img src="img/timeline/like_icon.png" width="40px"> <span style="color: #7478b9; font-weight: bold">{{ data['promise_likes'] }}</span>
                                         </div>
-                                    </div>
+                                    </div></a>
                                 <br>
                                     <h1 style="color: #7478b9; font-size: 50px; font-weight: normal">{{ data['promise_title'] }}</h1>
 

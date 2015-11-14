@@ -20,11 +20,6 @@ def go_timeline():
     return redirect('/domyung/timeline')
 
 
-@sunrin_app_blueprint.route('/admin')
-def promise_list():
-    return redirect('/domyung/setting')
-
-
 # for send static files
 
 @sunrin_app_blueprint.route('/css/<path:filename>')

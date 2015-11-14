@@ -3,7 +3,8 @@ from models import Party
 from models import Promise
 from models import Likes
 from models import Checklist
-from flask import request, render_template, send_from_directory, session, redirect
+from flask import request, render_template, send_from_directory, session, redirect, url_for
+from flask_login import login_required, current_user
 import json
 from . import domyung_bp
 from sqlalchemy import extract
@@ -59,6 +60,25 @@ def show_promise():
         tmp = {'party': promise.party, 'title': promise.title, 'details': promise.details}
         data.append(tmp)
     return json.dumps(data)
+
+
+@domyung_bp.route('/add_like', methods=['GET'])
+@login_required
+def add_like():
+    title = request.args['title']
+    promise = db.session.query(Promise).filter_by(title=title).first()
+
+    userid = current_user.id
+
+    tmp = db.session.query(Likes).filter_by(promise=promise.id, ip=current_user.id).first()
+    if tmp is None:
+        pass
+    else:
+        return "DUP!! Already Press Like Buttom."
+
+    db.session.add(Likes(promise.id, True, current_user.id))
+    db.session.commit()
+    return redirect(url_for('.timeline'))
 
 
 @domyung_bp.route('/select')
@@ -145,19 +165,16 @@ def timeline():
 
 @domyung_bp.route('/add_dummy_data_db')
 def dummy_db_data():
-    """
     # add party
     p1 = Party('SinMyung')
     p2 = Party('DoDream')
     db.session.add(p1)
     db.session.add(p2)
     db.session.commit()
-    """
 
     sinmyung = db.session.query(Party).filter_by(id=1).first()
     dodream = db.session.query(Party).filter_by(id=2).first()
 
-    """
     # add sinmyung promise
     promise = Promise('빌:공약', '여러분이 원하는 공약을 들어드립니다.', sinmyung.id, 20151010)
     db.session.add(promise)
@@ -182,9 +199,7 @@ def dummy_db_data():
     promise = Promise('허니버터고3', '학업에 지친 고3 선배들을 위한 작은 이벤트', sinmyung.id, 20151010)
     db.session.add(promise)
     db.session.commit()
-    """
 
-    """
     # add dodream promise
     promise = Promise('선.디.전', '선린인터넷고와 디미고의 각종 대결을 추진', dodream.id, 20141010)
     db.session.add(promise)
@@ -209,9 +224,7 @@ def dummy_db_data():
     promise = Promise('?', '건의를 받아 공약 추진', dodream.id, 20141010)
     db.session.add(promise)
     db.session.commit()
-    """
 
-    """
     # add promise like data
     like = Likes(1, True, '0.0.0.1')
     db.session.add(like)
@@ -258,7 +271,7 @@ def dummy_db_data():
     like = Likes(22, True, '0.4.0.1')
     db.session.add(like)
     db.session.commit()
-    """
+
     return "Success"
 
 

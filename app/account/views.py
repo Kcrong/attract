@@ -1,10 +1,9 @@
-from flask import render_template, redirect, url_for, request, flash, session
-from flask_login import current_user, login_user, logout_user, login_required
-from flask.ext.oauth import OAuth
-from models import Users
-from ..DoMyung.models import Promise, Checklist
+# -*-coding: utf-8 -*-
 from app.account.login_manage import User, login_manager
-
+from flask import render_template, redirect, url_for, request, flash, session
+from flask.ext.oauth import OAuth
+from flask_login import current_user, login_user, logout_user, login_required
+from models import Users
 from . import account_bp
 from .. import app, db
 
@@ -96,7 +95,7 @@ def get_facebook_oauth_token():
 @login_required
 def logout():
     logout_user()
-    return 'Logged out'
+    return redirect('/domyung/timeline')
 
 
 @account_bp.route('/admin')
@@ -108,12 +107,12 @@ def admin():
 @account_bp.route('/setting', methods=['GET'])
 @login_required
 def setting():
-    #return "fixing..."
+    # return "fixing..."
 
     promise = request.args['promise']
 
-    #promise_db = db.session.query(Promise).filter_by(title=promise).first()
-    #checklists = db.session.query(Checklist).filter_by(promise=promise_db.id).all()
+    # promise_db = db.session.query(Promise).filter_by(title=promise).first()
+    # checklists = db.session.query(Checklist).filter_by(promise=promise_db.id).all()
     return render_template('admin.html',
                            promise=promise)
 
@@ -121,3 +120,12 @@ def setting():
 @login_manager.unauthorized_handler
 def go_login():
     return redirect('/account/login')
+
+
+@account_bp.route('/add_dummy_data_db')
+def dummy_db_data():
+    db.session.add(Users('dodream', 'dodream123', None, u'두드림'))
+    db.session.add(Users('dodream', 'dodream123', None, u'신명'))
+    db.session.commit()
+
+    return "Success"
