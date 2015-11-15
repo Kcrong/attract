@@ -43,5 +43,8 @@ admin = Admin(app)
 admin.add_view(ModelView(Promise, db.session))
 admin.add_view(ModelView(Checklist, db.session))
 
+def trim(string):
+    return string.replace(" ","-")
 
+app.jinja_env.globals.update(clever_function=trim)
 
