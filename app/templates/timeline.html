@@ -33,6 +33,12 @@
 
 
     <style>
+	
+	.promise-title {
+	    color: #7478b9; 
+	font-size: 35px; 	
+	font-weight: normal;
+	}
         .progress-button{
 	display: inline-block;
 	font-size:24px;
@@ -205,7 +211,7 @@
                                         </div>
                                     </div></a>
                                 <br>
-                                    <h1 style="color: #7478b9; font-size: 50px; font-weight: normal">{{ data['promise_title'] }}</h1>
+                                    <h1 class="promise-title">{{ data['promise_title'] }}</h1>
 
 
 
@@ -226,13 +232,13 @@
                                 {% if username == 'dodream' or username == 'sinmyung' %}
                                     <a href="/account/setting?promise={{ data['promise_title'] }}" class="cd=read-more" style="float: left;">Edit</a>
                                 {% endif %}
-                                    <a href="#{{ data['promise_title'] }}" class="cd-read-more modal-trigger" style="float: right; color: #7478b9; font-weight: bold">Read more</a>
+                                    <a href="#{{ clever_function(data['promise_title']) }}" class="cd-read-more modal-trigger" style="float: right; color: #7478b9; font-weight: bold">Read more</a>
 
                                    <!-- <span class="cd-date">{{ data['promise_date'] }}</span> -->
                                 </div>
                             </div>
 
-                            <div id="{{ data['promise_title'] }}" class="modal modal-fixed-footer">
+                            <div id="{{ clever_function(data['promise_title']) }}" class="modal modal-fixed-footer">
                                 <div class="modal-content">
                                     <div class="slider">
                                         <ul class="slides">

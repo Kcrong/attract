@@ -48,7 +48,7 @@
     .drop-target {
       //background-color: #29e;
       border-color: #fff;
-      border-style: solid;
+      //border-style: solid;
     }
     
 
@@ -117,7 +117,7 @@
       margin:30px;
       height: 200px;
       width: 250px;
-      border: 1px solid;
+      //border: 1px solid;
       justify-content: space-between; 
       display: inline-block;
     }
@@ -204,10 +204,9 @@
       ondropactivate: function(event) {
         var originTarget = document.getElementById(event.relatedTarget.id);
         originTarget.classList.add('drop-active');
-        //document.getElementById('cutting-board').classList.add('drop-active');
-
-        console.log('ondropactivate');
+        console.log(originTarget);
       },
+      
       ondragenter: function(event) {
 
         var draggableElement = event.relatedTarget,
@@ -232,6 +231,7 @@
       },
       ondrop: function(event) {
         console.log('on drop');
+        console.log(event.relatedTarget);
         var originTarget = document.getElementById(event.relatedTarget.id);
         originTarget.classList.remove('moving');
         //originTarget.style.left=$(window).innerWidth()/2+"px";
@@ -245,7 +245,11 @@
         // remove active dropzone feedback
         originTarget.classList.remove('drop-active');
         originTarget.classList.remove('drop-target');
-
+        var sheeps = document.getElementsByClassName('sheep');
+        /*for(var i in sheeps)
+        {
+            sheeps[i].classList.remove('drop-active')
+        }*/
         //document.getElementById('cutting-board').classList.remove('drop-active');
         event.target.classList.remove('drop-target');
       }
@@ -334,18 +338,19 @@
       }
       if (this.x > canvasWidth && this.vX > 0) {
         this.vX *= -1;
-        console.log('what the width');
+        //console.log('what the width');
+
       }
       if (this.y < 0 || this.y > canvasHeight) {
         if(!this.body.classList.contains('drop-active'))
         {
           this.vY *= -1;
-          console.log('height over');
+          //console.log('height over');
         }
       }
       if (this.y > canvasHeight && this.vY > 0) {
         this.vY *= -1;
-        console.log('What the Weight');
+        //console.log('What the Weight');
       }
       //이동
       this.x += this.vX;
