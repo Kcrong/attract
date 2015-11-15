@@ -293,7 +293,7 @@ def img_static(filename):
 
 
 """
-#@domyung_bp.route('/add_db_info')
+@domyung_bp.route('/add_db_info')
 def asdf():
     sinmyung = db.session.query(Party).filter_by(id=1).first()
     dodream = db.session.query(Party).filter_by(id=2).first()

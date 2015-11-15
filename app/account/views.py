@@ -5,6 +5,7 @@ from flask.ext.oauth import OAuth
 from flask_login import current_user, login_user, logout_user, login_required
 from models import Users
 from . import account_bp
+from ..DoMyung import domyung_bp
 from .. import app, db
 
 oauth = OAuth()
@@ -46,7 +47,7 @@ def login():
             user = User(userid)
             login_user(user)
             session['username'] = userid
-            return redirect(url_for('.admin'))
+            return redirect(url_for('admin.index'))
         else:
             return 'Bad Login'
 
@@ -95,13 +96,9 @@ def get_facebook_oauth_token():
 @login_required
 def logout():
     logout_user()
+    del session['username']
+    del (session['username'])
     return redirect('/domyung/timeline')
-
-
-@account_bp.route('/admin')
-@login_required
-def admin():
-    return render_template('promise_list.html')
 
 
 @account_bp.route('/setting', methods=['GET'])
