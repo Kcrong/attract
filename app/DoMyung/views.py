@@ -63,20 +63,21 @@ def show_promise():
 
 
 @domyung_bp.route('/add_like', methods=['GET'])
-@login_required
 def add_like():
     title = request.args['title']
+    try:
+        username = session['username']
+    except KeyError:
+        return redirect(url_for('/account.fb_login'))
     promise = db.session.query(Promise).filter_by(title=title).first()
 
-    userid = current_user.id
-
-    tmp = db.session.query(Likes).filter_by(promise=promise.id, ip=current_user.id).first()
+    tmp = db.session.query(Likes).filter_by(promise=promise.id, ip=username).first()
     if tmp is None:
         pass
     else:
         return "DUP!! Already Press Like Buttom."
 
-    db.session.add(Likes(promise.id, True, current_user.id))
+    db.session.add(Likes(promise.id, True, username))
     db.session.commit()
     return redirect(url_for('.timeline'))
 
@@ -293,7 +294,7 @@ def img_static(filename):
 
 
 """
-#@domyung_bp.route('/add_db_info')
+@domyung_bp.route('/add_db_info')
 def asdf():
     sinmyung = db.session.query(Party).filter_by(id=1).first()
     dodream = db.session.query(Party).filter_by(id=2).first()
