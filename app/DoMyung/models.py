@@ -10,6 +10,8 @@ class Party(db.Model):
     def __init__(self, title):
         self.title = title
 
+    def __unicode__(self):
+        return self.title
 
 class Promise(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -38,6 +40,9 @@ class Likes(db.Model):
         self.like = like
         self.ip = ip
 
+    def __unicode__(self):
+        res = len(list(self.query.filter_by(id=self.id)))
+        return str(res)
 
 class Checklist(db.Model):
     id = db.Column(db.Integer, primary_key=True)
