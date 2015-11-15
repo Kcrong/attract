@@ -35,8 +35,13 @@ def user_loader(email):
 
 @account_bp.route('/login', methods=['GET', 'POST'])
 def login():
-    if current_user.is_authenticated is not False:
-        return redirect('/')
+    try:
+        username = session['username']
+    except KeyError:
+        pass
+    else:
+        if username == 'dodream' or username == 'sinmyung':
+            redirect(url_for('/domyung.timeline'))
     if request.method == 'GET':
         return render_template('login.html')
     else:
@@ -50,6 +55,14 @@ def login():
             return redirect(url_for('admin.index'))
         else:
             return 'Bad Login'
+
+
+@account_bp.route('/logout')
+@login_required
+def logout():
+    logout_user()
+    del session['username']
+    return redirect(url_for('/domyung.timeline'))
 
 
 @app.route('/account/login/facebook')
@@ -90,15 +103,6 @@ def fb_login():
 @facebook.tokengetter
 def get_facebook_oauth_token():
     return session.get('fb_access_token')
-
-
-@account_bp.route('/logout')
-@login_required
-def logout():
-    logout_user()
-    del session['username']
-    del (session['username'])
-    return redirect('/domyung/timeline')
 
 
 @account_bp.route('/setting', methods=['GET'])
