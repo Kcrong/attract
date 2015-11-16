@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+<style>
+    html {
+      background-image: url('../static/images/attract/background.png');
+      background-size: cover;
+      background-repeat: no-repeat;
+      height: 100%;
+      width: 100%;
+      html-height: 100%;
+    }
+
+    #sheep {
+        margin-top: 100px;
+    }
+
+    #result {
+        color: #fff;
+        text-align: center;
+        margin:auto;
+        font-size: 40px;
+    }
+</style>
+
+</head>
+<body>
+<div align="center">
+    <img src="img/attract/loading.gif" id="load" />
+</div>
+    <!--div align="center">
+        <div style="background-color: #FFFFFF;width: 40%;border-radius: 5px;">
+            <h6 style="font-size: 50px;">두드림 50%</h6>
+        </div>
+    </div-->
+    <script>
+    setTimeout(function(){ document.body.outerHTML = '<div id="sheep">'+
+        '<div align="center">'+
+            '<img src="img/attract/shinmyeong.png" style="max-width: 40%; max-height: 40%;">'+
+        '</div>'+
+    '</div><br /><br /> <div><p id="result">당신의 선택은 <b>{{  party }}</b> 입니다!</p></div>'; }, 5000);
+
+    </script>
+</body>
+</html>

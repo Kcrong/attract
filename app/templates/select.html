@@ -92,7 +92,7 @@
       font-size: 20px;
       color: #000;
       width:200px; left:0; right:0; 
-      padding-left: 100px;
+      padding-left: 80px;
       padding-top: 75px;
       //font-weight: bold;
     }
@@ -140,7 +140,7 @@
     <script>
     var movingTexts = {};
     var id = 0;
-
+    var cnt = 0;
     interact('.cloud')
       .draggable({
         // enable inertial throwing
@@ -226,6 +226,7 @@
         draggableElement.classList.remove('can-drop');
         draggableElement.classList.remove('drag-in');
         draggableElement.classList.add('moving');
+        cnt -= 1;
         console.log('drag leave!');
 
       },
@@ -238,6 +239,7 @@
         console.log(originTarget.style);
         console.log('on drop');
         originTarget.dragIn = true;
+        cnt += 1;
       },
       ondropdeactivate: function(event) {
         var originTarget = document.getElementById(event.relatedTarget.id);
@@ -365,7 +367,9 @@
     window.onload = function() {
         //var texts = ['공약곤냥공냑 공양', '공약곤냥공냑공양', '공약곤냥공냑공양', '공약 곤냥공냑공양', '공약곤냥공냑 공양', '공약곤냥공냑 공양', '공약곤냥공냑공양', '공약 곤냥공냑공양', '공약곤냥공냑 공양', '공약곤냥공냑공양', '공약곤냥공냑공양', '공약곤냥공냑공양', '공약곤냥공 냑공양', '공약곤냥공냑공양', '공약곤냥공냑공양', '공약곤냥공냑공양', '공약곤냥공냑 공양', '공약곤냥공냑공양', '공약곤냥공냑공양', '공약곤냥공냑공양'];
         //var texts = ["빌:공약", "선린 챔스"];
-        var texts = ['선.디.전', '애플데이', '별빛이 내린다', '2 dream ','게임채널 e', '홍보가 기가막혀', 'guess ','고삼 Pictures', '구기대회', '급식의지니', '선린챔스', '대여해도 돼여?', '학생증 리뉴얼'];
+        var texts = ['선.디.전', '애플데이', '별빛이 내린다', '2 dream ','게임채널 e', '홍보가 기가막혀', 'guess ','고삼 Pictures',
+            '구기대회', '선린 App 개발', '?', '빌:공약', '선린뉴스', '급식의지니', '모두의 축제', '선림픽', '선린챔스', '대여해도 돼여?', '' +
+            '학생증 리뉴얼', '프린터를 부탁해'];
         //배열에 MovingText 객체 생성
         for (var i in texts) {
           movingTexts[i] = new MovingText(i, texts[i]);
@@ -386,6 +390,10 @@
               movingTexts[i].body.classList.contains('drop-active') == false) {
               movingTexts[i].move();
             }
+          }
+          if(cnt == 5)
+          {
+              location.href = '/domyung/result?party=두드림';
           }
         }, 20); // end setInterval
 

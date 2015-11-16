@@ -89,7 +89,8 @@ def select():
 
 @domyung_bp.route('/result')
 def select_result():
-    return render_template('complete_select.html')
+    party = request.args['party']
+    return render_template('result.html', party=party)
 
 
 @domyung_bp.route('/like_promise', methods=['POST'])
