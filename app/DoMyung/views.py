@@ -5,6 +5,7 @@ import random
 import string
 
 from flask import request, render_template, send_from_directory, session, redirect, url_for
+from flask.ext.login import login_required, current_user
 from sqlalchemy import extract
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.sql import func
@@ -60,23 +61,27 @@ def show_promise():
 
 
 @domyung_bp.route('/add_like', methods=['GET'])
+@login_required
 def add_like():
     title = request.args['title']
-    try:
-        username = session['username']
-    except KeyError:
-        return redirect(url_for('/account.fb_login'))
-    promise = db.session.query(Promise).filter_by(title=title).first()
+    ip_addr = request.remote_addr
 
-    tmp = db.session.query(Likes).filter_by(promise=promise.id, ip=username).first()
-    if tmp is None:
-        pass
+    req_promise = Promise.query.filter_by(title=title).first()
+
+    user_like = req_promise.likes.filter_by(ip=ip_addr).first()
+
+    if user_like is None:
+        new_like = Like(ip_addr)
+
+        db.session.add(new_like)
+        req_promise.likes.append(new_like)
+
+        db.session.commit()
+        error = False
     else:
-        return "DUP!! Already Press Like Buttom."
+        error = "이미 좋아요 버튼을 누르셨습니다."
 
-    db.session.add(Likes(promise.id, True, username))
-    db.session.commit()
-    return redirect(url_for('.timeline'))
+    return redirect(url_for('.timeline', error=error))
 
 
 @domyung_bp.route('/select')
@@ -95,7 +100,7 @@ def like_promise():
     data = request.form
     party = db.session.query(Party).filter_by(id=data['party']).first()
     promise = db.session.query(Promise).filter_by(party=party.id, date=data['date'])
-    like = db.session.query(Likes).filter_by(promise=promise.id)
+    like = db.session.query(Like).filter_by(promise=promise.id)
     like.like = data['like']
     db.session.commit()
     return True
@@ -132,34 +137,20 @@ def add_checklist():
 
 @domyung_bp.route('/timeline')
 def timeline():
-    try:
-        username = session['username']
-    except KeyError:
-        username = 'Anonymous'
-    date_range = db.session.query(func.min(Promise.date).label("min_year"),
-                                  func.max(Promise.date).label("max_year")).one()
-    years = range(date_range[0].year, date_range[1].year + 1)
 
-    all_promises = {}
+    years = [year_tuple[0]
+             for year_tuple in
+             Promise.query.group_by(func.year(Promise.date)).with_entities(func.year(Promise.date)).all()]
+
+    all_promises = dict()
 
     for year in years:
-        year_promises = db.session.query(Promise).filter(extract('year', Promise.date) == year).all()
-        promises = []
-        for promise in year_promises:
-            tmp = {'promise_title': promise.title,
-                   'promise_info': promise.details,
-                   'promise_date': promise.date,
-                   'promise_party': promise.party,
-                   'promise_percent': promise.percentage,
-                   'promise_likes': db.session.query(Likes).filter_by(promise=promise.id).count()}
-            promises.append(tmp)
+        all_promises[str(year)] = Promise.query.filter(extract('year', Promise.date) == year).all()
 
-        all_promises[str(year)] = promises
-
-    return render_template('timeline.html',
+    return render_template('domyung/timeline.html',
                            promise_data=all_promises,
                            years=years,
-                           username=username)
+                           username=current_user)
 
 
 # for send static files
