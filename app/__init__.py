@@ -19,6 +19,7 @@ tmpl_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'templates')
 
 app = Flask(__name__, template_folder=tmpl_dir)
 db = SQLAlchemy()
+login_manager = LoginManager()
 
 
 def create_app():
@@ -43,12 +44,18 @@ manager = Manager(app)
 
 manager.add_command('db', MigrateCommand)
 
-login_manager = LoginManager()
+login_manager.init_app(app)
+login_manager.anonymous_user = GuestUser
 
 
 @login_manager.unauthorized_handler
 def unauthorized():
     return redirect(url_for('account.login'))
+
+
+@login_manager.user_loader
+def user_loader(userid):
+    return User.query.get(userid)
 
 
 admin = Admin(app)
