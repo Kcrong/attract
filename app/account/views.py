@@ -1,11 +1,10 @@
 # -*-coding: utf-8 -*-
-from app.account.login_manage import User, login_manager
 from flask import render_template, redirect, url_for, request, flash, session
 from flask.ext.oauth import OAuth
-from flask_login import current_user, login_user, logout_user, login_required
-from models import Users
+from flask_login import login_user, logout_user, login_required
+from ..models import *
+
 from . import account_bp
-from ..DoMyung import domyung_bp
 from .. import app, db
 
 oauth = OAuth()
@@ -27,12 +26,6 @@ def home():
     return "Hello %s" % session['username']
 
 
-@login_manager.user_loader
-def user_loader(email):
-    user = User(email)
-    return user
-
-
 @account_bp.route('/login', methods=['GET', 'POST'])
 def login():
     try:
@@ -43,7 +36,7 @@ def login():
         if username == 'dodream' or username == 'sinmyung':
             redirect(url_for('/domyung.timeline'))
     if request.method == 'GET':
-        return render_template('login.html')
+        return render_template('account/login.html')
     else:
         userid = request.form['id']
         password = request.form['password']
@@ -62,7 +55,7 @@ def login():
 def logout():
     logout_user()
     del session['username']
-    return redirect(url_for('/domyung.timeline'))
+    return redirect(url_for('domyung.timeline'))
 
 
 @app.route('/account/login/facebook')
@@ -114,13 +107,8 @@ def setting():
 
     # promise_db = db.session.query(Promise).filter_by(title=promise).first()
     # checklists = db.session.query(Checklist).filter_by(promise=promise_db.id).all()
-    return render_template('admin.html',
+    return render_template('account/admin.html',
                            promise=promise)
-
-
-@login_manager.unauthorized_handler
-def go_login():
-    return redirect('/account/login')
 
 
 @account_bp.route('/add_dummy_data_db')

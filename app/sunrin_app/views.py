@@ -7,7 +7,7 @@ from flask import render_template, send_from_directory, send_file, redirect
 @sunrin_app_blueprint.route('/')
 @sunrin_app_blueprint.route('/index')
 def index():
-    return render_template('index.html')
+    return render_template('sunrin_app/index.html')
 
 
 @sunrin_app_blueprint.route('/select')
