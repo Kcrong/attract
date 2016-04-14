@@ -13,7 +13,7 @@ from ..models import *
 
 
 def randomkey(length):
-    return ''.join(random.choice(string.ascii_lowercase) for i in range(length))
+    return ''.join(random.choice(string.ascii_lowercase) for _ in range(length))
 
 
 domyung_bp.static_folder = os.path.join(domyung_bp.root_path, '../static/')
