@@ -145,18 +145,13 @@
             <img src="img/timeline/setting.png" alt="setting" style="vertical-align: middle; margin-right: 10px">
         </div>
         </a>
-        {% if username == 'dodream' or username == 'sinmyung' %}
-        <h1>연표 이행도 Administrator Mode</h1>
-        {% else %}
-        <h1>연표 이행도</h1>
-        {% endif %}
     </header>
     -->
     <div style="width: 100%; height: auto;">
-            {% if username == 'dodream' or username == 'sinmyung' %}
-            <a href="/account/logout"><div style="float: right; padding-top: 10px; padding-right: 20px">로그아웃</div></a>
+            {% if current_user.is_authenticated %}
+            <a href="{{ url_for('account.logout') }}"><div style="float: right; padding-top: 10px; padding-right: 20px">로그아웃</div></a>
             {% else %}
-            <a href="/account/login"><div style="float: right; padding-top: 10px; padding-right: 20px">로그인</div></a>
+            <a href="{{ url_for('account.login') }}"><div style="float: right; padding-top: 10px; padding-right: 20px">로그인</div></a>
             {% endif %}
     </div>
     <div style="width: 100%;height: auto">
@@ -192,7 +187,7 @@
                         {%  for data in promise_data[year|string] %}
 
                             <div class="cd-timeline-block">
-                            {% if promise_data[year|string][0]['promise_party'] == 2 %}
+                            {% if promise_data[year|string][0].party.id == 2 %}
                                 <div class="cd-timeline-img cd-dodream bounce-in" style="background-image: url('img/timeline/party_circle_big.png')">
                             {% else %}
                                 <div class="cd-timeline-img cd-sinmyung bounce-in">
@@ -203,9 +198,9 @@
 
                                 <div class="cd-timeline-content">
                                 <span style="color: #7478b9; font-weight: bold">{{ data.date.year }}년 {{ data.date.month }}월 {{ data.date.day }}일</span>
-                                    <a href="add_like?title={{ data.title }}"><div style="width: 100%">
+                                    <a href="{{ url_for('domyung.add_like',title=data.title) }}"><div style="width: 100%">
                                         <div style="float: right">
-                                        <img src="img/timeline/like_icon.png" width="40px"> <span style="color: #7478b9; font-weight: bold">{{ data['promise_likes'] }}</span>
+                                        <img src="img/timeline/like_icon.png" width="40px"> <span style="color: #7478b9; font-weight: bold">{{ data.likes.all()|length }}</span>
                                         </div>
                                     </div></a>
                                 <br>
@@ -215,7 +210,7 @@
 
                                     <!--<progress value="{{ data.percentage }}" max="100"></progress> -->
                                     <div class="progress" style="background-color: white; border: unset; border-radius: 10px" >
-                                        <div class="determinate" style="width: {{ data['promise_percent'] }}%; background-color: #7478b9;
+                                        <div class="determinate" style="width: {{ data.percentage }}%; background-color: #7478b9;
                                                 border-radius: 10px;
                                                 border: 2px solid;
                                                 text-align: center"><span style="color: white; font-weight: lighter">{{ data.percentage }}%</span></div>
@@ -227,8 +222,8 @@
 
                                     <p><span style="color: #7478b9; font-weight: bold; font-family: 'Open Sans', sans-serif">{{ data.detail }}</span></p>
 
-                                {% if username in ['dodream', 'sinmyung'] %}
-                                    <a href="{{ url_for('account.setting') }}?promise={{ data.title }}" class="cd=read-more" style="float: left;">Edit</a>
+                                {% if current_user.is_authenticated %}
+                                    <a href="{{ url_for('account.setting', promise=data.title) }}" class="cd=read-more" style="float: left;">Edit</a>
                                 {% endif %}
                                     <a href="#{{ clever_function(data.title) }}" class="cd-read-more modal-trigger" style="float: right; color: #7478b9; font-weight: bold">Read more</a>
                                 

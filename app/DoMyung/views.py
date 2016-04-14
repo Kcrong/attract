@@ -25,7 +25,7 @@ domyung_bp.static_folder = os.path.join(domyung_bp.root_path, '../static/')
 def add_promise():
     data = request.form
     party = db.session.query(Party).filter_by(id=data['party']).first()
-    p = Promise(data['title'], data['details'], party.id, data['date'])  # data['date'] = YYYYMMDD
+    p = Promise(data['title'], data['details'], data['date'])  # data['date'] = YYYYMMDD
     db.session.add(p)
     try:
         db.session.commit()
@@ -61,7 +61,6 @@ def show_promise():
 
 
 @domyung_bp.route('/add_like', methods=['GET'])
-@login_required
 def add_like():
     title = request.args['title']
     ip_addr = request.remote_addr
@@ -77,11 +76,10 @@ def add_like():
         req_promise.likes.append(new_like)
 
         db.session.commit()
-        error = False
-    else:
-        error = "이미 좋아요 버튼을 누르셨습니다."
+        return redirect(url_for('.timeline'))
 
-    return redirect(url_for('.timeline', error=error))
+    else:
+        return redirect(url_for('.timeline', error="이미 좋아요 버튼을 누르셨습니다."))
 
 
 @domyung_bp.route('/select')
@@ -137,6 +135,7 @@ def add_checklist():
 
 @domyung_bp.route('/timeline')
 def timeline():
+    error = request.args.get('error')
 
     years = [year_tuple[0]
              for year_tuple in
@@ -150,7 +149,8 @@ def timeline():
     return render_template('domyung/timeline.html',
                            promise_data=all_promises,
                            years=years,
-                           username=current_user)
+                           username=current_user,
+                           error=error)
 
 
 # for send static files
