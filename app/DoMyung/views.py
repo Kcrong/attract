@@ -4,8 +4,8 @@ import os
 import random
 import string
 
-from flask import request, render_template, send_from_directory, session, redirect, url_for
-from flask.ext.login import login_required, current_user
+from flask import request, render_template, send_from_directory, redirect, url_for
+from flask.ext.login import current_user
 from sqlalchemy import extract
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.sql import func
