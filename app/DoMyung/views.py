@@ -1,5 +1,4 @@
 # -*-coding: utf-8 -*-
-import json
 import os
 import random
 import string
@@ -7,7 +6,6 @@ import string
 from flask import request, render_template, send_from_directory, redirect, url_for
 from flask.ext.login import current_user
 from sqlalchemy import extract
-from sqlalchemy.exc import IntegrityError
 from sqlalchemy.sql import func
 
 from . import domyung_bp
@@ -19,45 +17,6 @@ def randomkey(length):
 
 
 domyung_bp.static_folder = os.path.join(domyung_bp.root_path, '../static/')
-
-
-@domyung_bp.route('/add', methods=['POST'])
-def add_promise():
-    data = request.form
-    party = db.session.query(Party).filter_by(id=data['party']).first()
-    p = Promise(data['title'], data['details'], data['date'])  # data['date'] = YYYYMMDD
-    db.session.add(p)
-    try:
-        db.session.commit()
-    except IntegrityError as e:
-        db.session.rollback()
-        return "Duplicate key: %s" % e.args[0].split('for key')[1].split("'")[1]
-    return "Success"
-
-
-@domyung_bp.route('/del', methods=['DELETE'])
-def del_promise():
-    data = request.args
-    party = db.session.query(Party).filter_by(id=data['party']).first()
-    p = db.session.query(Promise).filter_by(title=data['title'], details=data['details'], party=party.id).first()
-    if p is None:
-        return "There is no promise like that"
-    db.session.delete(p)
-    db.session.commit()
-    return "Success"
-
-
-@domyung_bp.route('/list', methods=['GET'])
-def show_promise():
-    data = []
-    party_id = request.args['party']
-    party = db.session.query(Party).filter_by(id=party_id).first()
-    promise_list = db.session.query(Promise).filter_by(party=party.id).all()
-    # party is 0 or 1
-    for promise in promise_list:
-        tmp = {'party': promise.party, 'title': promise.title, 'details': promise.details}
-        data.append(tmp)
-    return json.dumps(data)
 
 
 @domyung_bp.route('/add_like', methods=['GET'])
@@ -91,46 +50,6 @@ def select():
 def select_result():
     party = request.args['party']
     return render_template('domyung/result.html', party=party)
-
-
-@domyung_bp.route('/like_promise', methods=['POST'])
-def like_promise():
-    data = request.form
-    party = db.session.query(Party).filter_by(id=data['party']).first()
-    promise = db.session.query(Promise).filter_by(party=party.id, date=data['date'])
-    like = db.session.query(Like).filter_by(promise=promise.id)
-    like.like = data['like']
-    db.session.commit()
-    return True
-
-
-@domyung_bp.route('/edit_percentage', methods=['POST'])
-def edit_percentage():
-    data = request.form
-    party = db.session.query(Party).filter_by(id=data['party']).first()
-    promise = db.session.query(Promise).filter_by(party=party.id, title=data['title'], date=data['date']).first()
-    promise.percentage = data['percent']
-    db.session.commit()
-    return "Success"
-
-
-@domyung_bp.route('/add_checklist', methods=['POST'])
-def add_checklist():
-    data = request.form
-    page = data['page']
-    title = data['detail_title']
-    description = data['description']
-    promise = data['promise']
-    image = request.files['image']
-    filename = randomkey(len(image.filename)) + '.' + image.filename.rsplit('.', 1)[1]
-    path = '../static/images/checklist/' + filename
-    path = os.path.join(domyung_bp.root_path, path)
-
-    image.save(path)
-    promise_obj = db.session.query(Promise).filter_by(title=promise).first()
-    db.session.add(Checklist(page, filename, description, title, promise_obj.id))
-    db.session.commit()
-    return redirect('/account/setting?promise=' + promise)
 
 
 @domyung_bp.route('/timeline')

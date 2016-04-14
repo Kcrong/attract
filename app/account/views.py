@@ -28,17 +28,3 @@ def logout():
     logout_user()
     del session['username']
     return redirect(url_for('domyung.timeline'))
-
-
-@account_bp.route('/setting', methods=['GET'])
-@login_required
-def setting():
-    promise = request.args['promise']
-
-    return render_template('account/admin.html',
-                           promise=promise)
-
-
-@account_bp.route('/add_dummy_data_db')
-def dummy_db_data():
-    return "Success"
